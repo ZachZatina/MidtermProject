@@ -5,7 +5,7 @@ public abstract class Payment {
 	private double tax;
 	private double total;
 	
-	public abstract void price();
+	public abstract void payment();
 	
 	public Payment() {
 		
@@ -30,6 +30,10 @@ public abstract class Payment {
 		double total;
 		total = subtotal + tax;
 		this.total = total;
+		return total;
+	}
+	
+	public double toPaymentTotal() {
 		return total;
 	}
 
