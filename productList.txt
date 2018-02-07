@@ -1,0 +1,4 @@
+Metal Taco,Entree,Taco with nuts and bolts,2.50
+Oily Taco,Entree,Taco with engine oil,3.50
+Neuron Burrito,Entree,Burrito with neural network,5.50
+Gears and Guacamole,Side,Array of gears and large bowl of Korean guacamole,6.50
