@@ -28,7 +28,8 @@ public class POSTerminal {
 			productList = new ArrayList<Product>();
 			productList = createProductList();
 			System.out.println("Menu: (Item, Category, Description, Price)\n");
-
+			
+			// refactor this as method displayProductList
 			int i = 1;
 			for (Product e : productList) {
 				// System.out.println(e.getProductName() + ", " + e.getProductCat() + ", " +
@@ -50,7 +51,7 @@ public class POSTerminal {
 			
 			System.out.printf("%s, $%s", productList.get(itemChoice).getProductName(),
 					productList.get(itemChoice).getPrice());
-			//
+			System.out.println();
 
 			
 		} // end if == 1
@@ -59,12 +60,50 @@ public class POSTerminal {
 
 		// prompt: view cart? complete order? add another item? remove item?
 
+		
+		
+		// Create a directory called "transactions" to hold receipts
+		// If directory doesn't exist, create one
+		createDirectory("transactions"); 
+		// create receipt file, put in directory
+		String receiptNum = "receipt001"; // FIXME: add a counter to add number to receipt? or time stamp?
+		createReceipt(receiptNum); 
+		
+		// write to receipt
+	
+		//Cart cart = new Cart(2, "taco", 40.5);  	// test code, create sample cart
+		//System.out.println(cart.getLineTotal());
+		
+		String payType = "cash"; // test code
+		
+		// writeReceipt(receiptNum, cart, payType); -- change to cartList
+		
+	} // end Main
+	
+	
+	public static void createDirectory(String dirString) { // referencing directory path
+
+		Path dirPath = Paths.get(dirString);
+		System.out.println("New folder created: " + dirPath.toAbsolutePath());
+
+		if (Files.notExists(dirPath)) {
+			try {
+				Files.createDirectory(dirPath);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				System.out.println("Not sure what happened, contact customer service.");
+			}
+
+		}
+
 	}
 
 	// method to create receipt as txt file
-	public static void createFile(String dirString, String fileString) {
+	public static void createReceipt(String fileString) {
 		
-		Path filePath = Paths.get(dirString, fileString);
+		Path filePath = Paths.get("transactions", fileString); // hardcoded directory
 		
 		if (Files.notExists(filePath)) {
 			try {
@@ -86,20 +125,27 @@ public class POSTerminal {
 	// total
 	
 	
-	public static void writeReceipt(String dirString, String filePath, Cart cart) {
+	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType) {
 
-		Path writeFile = Paths.get(dirString, filePath);
+		Path writeFile = Paths.get("transactions", filePath);
 
 		File file = writeFile.toFile();
 
+		System.out.println(payType);
+		
+		//for loop
+		//cartList.get(arg0).toString
+		
+		//System.out.println("Test:" + cart.toString()); // test code
+		
 		try {
 			PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
 
-			printOut.println(cart.toString());
+			// printOut.println(cart.toString()); // print to txt file
 
 			printOut.close(); //
 		} catch (FileNotFoundException e) {
-			// output comment
+			// output an error comment
 			e.printStackTrace();
 		}
 	}
