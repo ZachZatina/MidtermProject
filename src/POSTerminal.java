@@ -65,13 +65,28 @@ public class POSTerminal {
 
 				if (payType.equalsIgnoreCase("CASH")) {
 					correctType = true;
+					System.out.print("Enter cash value: ");
+					double tendered = scan.nextDouble();
+					double change = tendered - lineTotal;
+					System.out.print("Change = " + change);
 					Payment p = new CashPayment(); // type the needed inputs here for the cashPayment class
 				} else if (payType.equalsIgnoreCase("CHECK")) {
 					correctType = true;
-					Payment p = new CreditCardPayment(); // put corresponding inputs in ().
+					System.out.print("Enter check number: ");
+					String checkNum = scan.next();
+					System.out.println("The check number entered is: " + checkNum);
+					Payment p = new CheckPayment(); // put corresponding inputs in ().
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
-					Payment p = new CheckPayment(); // type corresponding inputs.
+					System.out.print("Enter credit card number: ");
+					String ccNumber = scan.next();
+					ccNumber = ccNumber.replace(ccNumber.subSequence(0, 11), "XXXX-XXXX-XXXX-");
+					System.out.print("Enter the expiration date: ");
+					String expDate = scan.next();
+					System.out.print("Enter the CVV: ");
+					String cvv = scan.next();
+					System.out.println(ccNumber +" "+ cvv +" "+ expDate);
+					Payment p = new CreditCardPayment(); // type corresponding inputs.
 				} else {
 					System.out.println("This is not a valid input");
 				}
