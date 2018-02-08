@@ -24,7 +24,7 @@ public class POSTerminal {
 
 		ArrayList<Product> productList;
 		ArrayList<Cart> cartList;
-		Payment payment = new SubPayment();
+		Payment payment = new Payment();
 		
 
 		if (userChoice == 1) {
@@ -257,8 +257,9 @@ public class POSTerminal {
 	public static void displayProductList(ArrayList<Product> productList) {
 		int i = 1;
 		for (Product e : productList) {
-			System.out.printf("%s. %s   /   %s   /   %s   /   $%s\n", i, e.getProductName(), e.getProductCat(),
-					e.getProductDesc(), e.getPrice());
+			System.out.printf("%s. %-12s %-30s $%-10.4s\n%-150s\n", i, e.getProductCat(), e.getProductName(),
+					e.getPrice(), e.getProductDesc());
+			System.out.println("");
 			i++;
 		}
 	}

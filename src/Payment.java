@@ -1,12 +1,10 @@
 
-public abstract class Payment {
+public class Payment {
 	
 	private double subtotal = 0.00;
 	private double tax;
 	private double total;
-	
-	public abstract void payment();
-	
+		
 	public Payment() {
 		
 	}

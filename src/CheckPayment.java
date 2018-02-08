@@ -2,10 +2,6 @@
 public class CheckPayment extends Payment {
 
 	private String checkNum;
-
-	@Override
-	public void payment() {
-	}
 	
 	public CheckPayment () {
 		

@@ -4,13 +4,6 @@ public class CreditCardPayment extends Payment {
 	private String expDate;
 	private String ccv;
 	private double total;
-
-
-	@Override
-	public void payment() {
-		this.total = super.toPaymentTotal();
-
-	}
 	
 	public CreditCardPayment() {
 		
