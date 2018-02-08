@@ -5,20 +5,32 @@ public class CreditCardPayment extends Payment {
 	private String ccv;
 	private double total;
 
+
 	@Override
 	public void payment() {
 		this.total = super.toPaymentTotal();
 
 	}
+	
+	public CreditCardPayment() {
+		
+	}
+	
+	public CreditCardPayment(double subtotal, double tax, double total, String ccNumber, String expDate, String ccv) {
+		super(subtotal, tax, total);
+		this.ccNumber = ccNumber;
+		this.expDate = expDate;
+		this.ccv = ccv;
+		
+	}
+	
 
 	public String getCcNumber() {
 		return ccNumber;
 	}
 
 	public void setCcNumber(String ccNumber) {
-		ccNumber = ccNumber.replace(ccNumber.subSequence(0, 11), "XXXX-XXXX-XXXX-");
 		this.ccNumber = ccNumber;
-
 	}
 
 	public String getExpDate() {

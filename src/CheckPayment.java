@@ -1,10 +1,19 @@
 
-public class CheckPayment extends Payment{
-	
+public class CheckPayment extends Payment {
+
 	private String checkNum;
 
 	@Override
-	public void payment() {		
+	public void payment() {
+	}
+	
+	public CheckPayment () {
+		
+	}
+	
+	public CheckPayment(double subtotal, double tax, double total, String checkNum) {
+		super(subtotal, tax, total);
+		this.checkNum = checkNum;
 	}
 
 	public String getCheckNum() {
@@ -14,7 +23,5 @@ public class CheckPayment extends Payment{
 	public void setCheckNum(String checkNum) {
 		this.checkNum = checkNum;
 	}
-	
-	
-	
+
 }
