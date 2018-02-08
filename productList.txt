@@ -1,7 +1,7 @@
-Entrée-Tech Taco-2.75-Bulgogi beef, pico de gallo, cabbage slaw, bean sprouts, cucumber, cilantro, corn tortilla
-Entrée-BeepBimBap Burrito-8.50-Spicy tofu, Korean seasoned rice, shredded cheese, cabbage slaw, pico de gallo, bean sprouts, cucumber, cilantro, flour tortilla
-Entrée-Robo-Rice Bowl-8.50-Kalbi Ribs, Korean seasoned rice, pico de gallo, cabbage slaw, bean sprouts, cucumbers, cilantro
-Entrée-Kinematic Kimchi Quesadilla-7.50-Chicken, kimchi, cheese, flour tortilla
+Entree-Tech Taco-2.75-Bulgogi beef, pico de gallo, cabbage slaw, bean sprouts, cucumber, cilantro, corn tortilla
+Entree-BeepBimBap Burrito-8.50-Spicy tofu, Korean seasoned rice, shredded cheese, cabbage slaw, pico de gallo, bean sprouts, cucumber, cilantro, flour tortilla
+Entree-Robo-Rice Bowl-8.50-Kalbi Ribs, Korean seasoned rice, pico de gallo, cabbage slaw, bean sprouts, cucumbers, cilantro
+Entree-Kinematic Kimchi Quesadilla-7.50-Chicken, kimchi, cheese, flour tortilla
 Sides-Bolts-1.00-Bag of chips
 Sides-Bolts and Screws-2.50-Chips and salsa
 Sides-Bolts and Gears-3.50-Chips and guacamole 
