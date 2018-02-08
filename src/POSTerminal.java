@@ -6,22 +6,62 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class POSTerminal {
 
 	public static void main(String[] args) {
-		System.out.println("place holder");
-
-		ArrayList<Product> productList = new ArrayList<Product>();
-
-		productList = createProductList();
 		
-		System.out.println("Menu: (Item, Category, Description, Price)\n");
-		for (Product e : productList) {
-			//System.out.println(e.getProductName() + ", " + e.getProductCat() + ", " + e.getProductDesc() + ", " + e.getPrice());
-			System.out.printf("%s, %s, %s, $%s\n", e.getProductName(), e.getProductCat(), e.getProductDesc(), e.getPrice());
-		}
+		Scanner scan = new Scanner(System.in);
+		
+		// prompt user: begin transaction?, [maybe: examine old transaction]
+		System.out.println("Welcome to the POS Terminal. (1) Begin transaction (2) Examine transactions");
+		int userChoice = scan.nextInt();
+	
+		ArrayList<Product> productList;
+		
+		if (userChoice == 1) {
+			// if no, exit; if yes: Display menu
+			productList = new ArrayList<Product>();
+			productList = createProductList();
+			System.out.println("Menu: (Item, Category, Description, Price)\n");
+			
+			int i = 1; 
+			for (Product e : productList) {
+				//System.out.println(e.getProductName() + ", " + e.getProductCat() + ", " + e.getProductDesc() + ", " + e.getPrice());
+				System.out.printf("%s. %s, %s, %s, $%s\n", i, e.getProductName(), e.getProductCat(), e.getProductDesc(),
+						e.getPrice());
+				i++;
+			
+			} 
+			// prompt: choose item? [bonus options: add an item? remove an item?]
+			System.out.println("Select an item to purchase. Enter item number."); 
+			int itemChoice = scan.nextInt() -1;
+			// Display choice and price
+			System.out.printf("%s, $%s", productList.get(itemChoice).getProductName(), productList.get(itemChoice).getPrice());
+				
+			
+		} // end if == 1
+		
+		
+		
+		// display item and price
+		
+		
+		// prompt: enter the quantity
+		
+		// display: line total (current item price * quantity)
+		// add to cart
+		
+		
+		// prompt: view cart? complete order? add another item? remove item? 
+		
+		
+		
+		
+		
+		
 		
 	}
 
