@@ -144,8 +144,8 @@ public class POSTerminal {
 				// then uses the pieces from the array to create a new object and add
 				// that to productArrayList
 				String singleProductArray[] = line.split("-");
-				productArrayList.add(new Product(singleProductArray[0], singleProductArray[1], singleProductArray[2],
-						Double.parseDouble(singleProductArray[3])));
+				productArrayList.add(new Product(singleProductArray[1], singleProductArray[0], singleProductArray[3],
+						Double.parseDouble(singleProductArray[2])));
 
 				line = reader.readLine();
 			}
