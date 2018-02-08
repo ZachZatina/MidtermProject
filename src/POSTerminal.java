@@ -24,6 +24,8 @@ public class POSTerminal {
 
 		ArrayList<Product> productList;
 		ArrayList<Cart> cartList;
+		Payment payment = new SubPayment();
+		
 
 		if (userChoice == 1) {
 			// if no, exit; if yes: Display menu
@@ -55,6 +57,14 @@ public class POSTerminal {
 					lineTotal);
 
 			cartList = convertToCart(itemQuantity, productList.get(itemChoice), lineTotal);
+			
+			// put this inside the loop to allow the user to keep picking things from the menu so it keeps adding to the subtotal.
+			double subtotal = payment.getSubtotal(itemQuantity, productList.get(itemChoice).getPrice());
+			
+			// these will need to be used in checkout, 
+			double tax = payment.getTax();
+			double total = payment.getTotal();
+			
 
 			scan.nextLine();// may not need this here to clear the scanner
 			String payType;
@@ -65,7 +75,7 @@ public class POSTerminal {
 
 				if (payType.equalsIgnoreCase("CASH")) {
 					correctType = true;
-					Payment p = new CashPayment(); // type the needed inputs here for the cashPayment class
+					Payment p = new CashPayment();// type the needed inputs here for the cashPayment class
 				} else if (payType.equalsIgnoreCase("CHECK")) {
 					correctType = true;
 					Payment p = new CreditCardPayment(); // put corresponding inputs in ().
@@ -76,6 +86,8 @@ public class POSTerminal {
 					System.out.println("This is not a valid input");
 				}
 			}
+			System.out.println("Exiting the loop worked");
+			
 
 		} // end if == 1
 
