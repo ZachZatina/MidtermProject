@@ -22,7 +22,6 @@ public class Product {
 		
 	}
 	
-	
 	public String getProductName() {
 		return productName;
 	}
@@ -49,7 +48,7 @@ public class Product {
 	}
 	
 	public String toString() {
-		return productCat + ": " + productName + ": " + productDesc + " $ " + price;
+		return String.format(productCat + ": " + productName + ": " + productDesc + " $ " + price);
 	}
 
 	
