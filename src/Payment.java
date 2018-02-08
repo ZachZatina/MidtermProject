@@ -5,6 +5,22 @@ public class Payment {
 	private double tax;
 	private double total;
 		
+	public double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(double subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public void setTax(double tax) {
+		this.tax = tax;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
+
 	public Payment() {
 		
 	}
@@ -15,26 +31,31 @@ public class Payment {
 		this.total = total;
 	}
 	
-	public double getSubtotal(int quantity, double price) {
+	public void calcSubtotal(int quantity, double price) {
 		double subTotal = 0;
 		subTotal = subtotal + (price * quantity);
 		this.subtotal = subTotal;
-		return subTotal;
 	}
 	
-	public double getTax() {
+	public void calcTax() {
 		final double TAXRATE = 0.06;
 		double tax;
 		tax = subtotal * TAXRATE;
 		this.tax = tax;
-		return tax;	
 	}
 	
+	public double getTax() {
+		return tax;
+	}
+
 	public double getTotal() {
+		return total;
+	}
+
+	public void calcTotal() {
 		double total;
 		total = subtotal + tax;
 		this.total = total;
-		return total;
 	}
 	
 	public double toPaymentTotal() {

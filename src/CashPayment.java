@@ -21,6 +21,10 @@ public class CashPayment extends Payment{
 	}
 
 
+	public void setChange(double change) {
+		this.change = change;
+	}
+
 	public double getTendered() {
 		return tendered;
 	}
