@@ -1,8 +1,11 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ public class POSTerminal {
 		Scanner scan = new Scanner(System.in);
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
-		System.out.println("Welcome to the POS Terminal. (1) Begin transaction (2) Examine transactions");
+		System.out.println("Welcome to the [name] POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions");
 		int userChoice = scan.nextInt();
 
 		ArrayList<Product> productList;
@@ -30,14 +33,14 @@ public class POSTerminal {
 			for (Product e : productList) {
 				// System.out.println(e.getProductName() + ", " + e.getProductCat() + ", " +
 				// e.getProductDesc() + ", " + e.getPrice());
-				System.out.printf("%s. %s, %s, %s, $%s\n", i, e.getProductName(), e.getProductCat(), e.getProductDesc(),
+				System.out.printf("%s. %s   /   %s   /   %s   /   $%s\n", i, e.getProductName(), e.getProductCat(), e.getProductDesc(),
 						e.getPrice());
 				i++;
 
 			}
 			// prompt: choose item? [bonus options: add an item? remove an item?]
-			System.out.println("Select an item to purchase. Enter item number.");
-			int itemChoice = scan.nextInt() - 1;
+			System.out.println("Enter item number to add to order.");
+			int itemChoice = scan.nextInt()-1;
 			// Display choice and price
 			System.out.println("Enter quantity:");
 			int itemQuantity = scan.nextInt();
@@ -58,6 +61,51 @@ public class POSTerminal {
 
 	}
 
+	// method to create receipt as txt file
+	public static void createFile(String dirString, String fileString) {
+		
+		Path filePath = Paths.get(dirString, fileString);
+		
+		if (Files.notExists(filePath)) {
+			try {
+				Files.createFile(filePath);
+				System.out.println("Receipt was created successfully.");
+			} catch (IOException e) {
+				System.out.println("Something went wrong, receipt not created.");
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	// method to write to receipt file
+	// name, phone, email
+	// use toString from Cart
+	// blank space btn items
+	// subtotal
+	// tax
+	// total
+	
+	
+	public static void writeReceipt(String dirString, String filePath, Cart cart) {
+
+		Path writeFile = Paths.get(dirString, filePath);
+
+		File file = writeFile.toFile();
+
+		try {
+			PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
+
+			printOut.println(cart.toString());
+
+			printOut.close(); //
+		} catch (FileNotFoundException e) {
+			// output comment
+			e.printStackTrace();
+		}
+	}
+
+
+	// method to create product list as an ArrayList, reading from txt file
 	public static ArrayList<Product> createProductList() {
 
 		ArrayList<Product> productArrayList = new ArrayList<Product>();
