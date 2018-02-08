@@ -19,6 +19,7 @@ public class POSTerminal {
 		int userChoice = scan.nextInt();
 
 		ArrayList<Product> productList;
+		ArrayList<Cart> cartList;
 
 		if (userChoice == 1) {
 			// if no, exit; if yes: Display menu
@@ -36,17 +37,18 @@ public class POSTerminal {
 
 			}
 			// prompt: choose item? [bonus options: add an item? remove an item?]
-			System.out.println("Select an item to purchase. Enter item number.");
+			System.out.print("Select an item to purchase. Enter item number: ");
 			int itemChoice = scan.nextInt() - 1;
 			// Display choice and price
-			System.out.println("Enter quantity:");
+			System.out.print("Enter quantity: ");
 			int itemQuantity = scan.nextInt();
+			double lineTotal = LineTotal(productList.get(itemChoice).getPrice(), itemQuantity);
 
 			// display: line total (current item price * quantity) -- use method
 			// add to cart
 			
-			System.out.printf("%s, $%s", productList.get(itemChoice).getProductName(),
-					productList.get(itemChoice).getPrice());
+			System.out.printf("%1$-4d %2$-20s $%3$-6.2f \n", (itemChoice + 1), productList.get(itemChoice).getProductName(),
+					lineTotal);
 			//
 
 			
@@ -93,4 +95,9 @@ public class POSTerminal {
 		return productArrayList;
 
 	}
+	
+	public static double LineTotal(double price, int quantity) {
+		return price * quantity;
+	}
+	
 }
