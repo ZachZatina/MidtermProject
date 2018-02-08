@@ -33,16 +33,8 @@ public class POSTerminal {
 			productList = createProductList();
 			System.out.println("Menu: (Item, Category, Description, Price)\n");
 			
-			// refactor this as method displayProductList
-			int i = 1;
-			for (Product e : productList) {
-				// System.out.println(e.getProductName() + ", " + e.getProductCat() + ", " +
-				// e.getProductDesc() + ", " + e.getPrice());
-				System.out.printf("%s. %s   /   %s   /   %s   /   $%s\n", i, e.getProductName(), e.getProductCat(),
-						e.getProductDesc(), e.getPrice());
-				i++;
-
-			}
+			displayProductList(productList);
+			
 			// prompt: choose item? [bonus options: add an item? remove an item?]
 			System.out.println("Enter item number to add to order.");
 			int itemChoice = scan.nextInt() - 1;
@@ -232,6 +224,28 @@ public class POSTerminal {
 		Cart input = new Cart(quantity, name, lineTotal);
 		cart.add(input);
 		return cart;
+	}
+	
+	public static void printCart(double subtotal, double tax, double total, ArrayList<Cart> cart) {
+		System.out.println("You currently have in your cart:");
+		System.out.println("");
+		for(int i = 0; i < cart.size(); i++) {
+			System.out.println(cart.get(i).toString());
+			System.out.println("");
+		}
+		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Subtotal:", subtotal));
+		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Tax:", tax));
+		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Total:", total));
 
 	}
+	
+	public static void displayProductList(ArrayList<Product> productList) {
+		int i = 1;
+		for (Product e : productList) {
+			System.out.printf("%s. %s   /   %s   /   %s   /   $%s\n", i, e.getProductName(), e.getProductCat(),
+					e.getProductDesc(), e.getPrice());
+			i++;
+		}
+	}
+	
 }
