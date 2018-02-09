@@ -4,12 +4,11 @@ public class Cart {
 	private String name;
 	private double lineTotal;
 	
+	// constructor for cart
 	public Cart(int quantity, String name, double lineTotal) {
 		this.quantity = quantity;
 		this.name = name;
 		this.lineTotal = lineTotal;
-		
-		
 	}
 
 	public int getQuantity() {
@@ -36,6 +35,7 @@ public class Cart {
 		this.lineTotal = lineTotal;
 	}
 	
+	// to string with format
 	public String toString() {
 		return String.format("%1$-4d %2$-20s $%3$-6.2f \n", quantity, name, lineTotal);
 	}

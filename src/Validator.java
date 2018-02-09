@@ -1,5 +1,3 @@
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Scanner;
 
 //you can add your own validation methods if needed
@@ -72,28 +70,6 @@ public class Validator {
 				isValid = true;
 		}
 		return d;
-
-//		public static double getDouble(Scanner sc, Scanner scan, String prompt) {
-//	double d = 0;
-//	double a = scan.nextDouble();
-//	double b = scan.nextDouble();
-//	BigDecimal a1 = new BigDecimal(a);
-//		BigDecimal b2 = new BigDecimal(b);
-//		boolean isValid = false;
-//		while (isValid == false) {
-//	}
-//		System.out.print(prompt);
-//		if (sc.hasNextDouble()) {
-//			d = sc.nextDouble();
-//			isValid = true;
-//		} else {
-//			System.out.println("Error! Invalid decimal value. Try again.");
-//			}
-//			sc.nextLine(); // discard any other data entered on the line
-//		}
-//		return d;
-//		
-	
 
 	}
 }

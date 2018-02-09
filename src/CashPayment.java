@@ -3,12 +3,12 @@ public class CashPayment extends Payment{
 	
 	private double change;
 	private double tendered;
-	private double total;
 
 	public CashPayment() {
 		
 	}
 	
+	// constructor for this class
 	public CashPayment (double subtotal, double tax, double total, double tendered) {
 		super(subtotal, tax, total);
 		this.change = tendered - total;
@@ -33,6 +33,7 @@ public class CashPayment extends Payment{
 		this.tendered = tendered;
 	}
 	
+	// overridden to string with format
 	@Override
 	public String toString() {
 		
