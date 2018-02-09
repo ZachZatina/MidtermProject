@@ -6,7 +6,7 @@ Sides-Bolts-1.00-Bag of chips
 Sides-Bolts and Screws-2.50-Chips and salsa
 Sides-Bolts and Gears-3.50-Chips and guacamole 
 Sides-KBit-1.50-Kimchi
-Sides-Extra RAM-2.0-Rice
+Sides-Extra RAM-2.00-Rice
 Beverages-Water-1.00-Water
 Beverages-Soda-2.00-Soda
 Beverages-DexteriTea-2.50-Iced Tea

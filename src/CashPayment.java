@@ -4,11 +4,6 @@ public class CashPayment extends Payment{
 	private double change;
 	private double tendered;
 	private double total;
-	
-	@Override
-	public void payment() {
-		this.total = super.toPaymentTotal();
-	}
 
 	public CashPayment() {
 		
@@ -25,6 +20,10 @@ public class CashPayment extends Payment{
 		return change;
 	}
 
+
+	public void setChange(double change) {
+		this.change = change;
+	}
 
 	public double getTendered() {
 		return tendered;
