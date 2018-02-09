@@ -15,7 +15,8 @@ import java.util.Scanner;
 public class POSTerminal {
 
 	public static void main(String[] args) {
-		String cont = "y"; // variable for while loop
+		String cont = "n"; // variable for while loop
+		int userOption = 0; // variable for option menu
 		double lineTotal = 0;
 		String payType;
 		Scanner scan = new Scanner(System.in);
@@ -40,7 +41,7 @@ public class POSTerminal {
 			
 			displayProductList(productList);
 // begin loop
-			while (cont.equalsIgnoreCase("y")){//while loop added for adding aditional items to transaction
+			while (cont.equalsIgnoreCase("n")){//while loop added for adding aditional items to transaction
 				int cartListCounter = 0;
 			// prompt: choose item? [bonus options: add an item? remove an item?]
 			System.out.print("Enter item number to add to order: ");
@@ -61,15 +62,27 @@ public class POSTerminal {
 			
 			// put this inside the loop to allow the user to keep picking things from the menu so it keeps adding to the subtotal.
 			payment.calcSubtotal(itemQuantity, productList.get(itemChoice).getPrice());
-			cont = Validator.getString(scan, "Would you like to add more items to this order (y/n): "); // question for continue here, but loop ends later to include payment tally
-
-		
-
+			
 			// these will need to be used in checkout, 
 			payment.calcTax();
 			payment.calcTotal();
+			
+			userOption = Validator.getInt(scan, "Would you like to: (1) add another item / (2) remove an item / (3) see cart / (4) or proceed to check-out", 1, 4);
+			if (userOption == 1) {
+				continue;
+			} else if (userOption == 2) {
+				cartList = removeFromCart(payment, cartList, scan);
+				printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+			} else if (userOption == 3) {
+				printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+			} else if (userOption == 4) {
+		
+			cont = Validator.getString(scan, "Would you like to proceed to checkout: (y/n): "); // question for continue here, but loop ends later to include payment tally
+			}
 			if (cont.equalsIgnoreCase("y")) {
 				continue;
+				
+
 			}//end while loop for adding additional items to transaction		
 			
 			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
@@ -79,7 +92,7 @@ public class POSTerminal {
 			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			} // temp end to while for cont
-			scan.nextLine();// may not need this here to clear the scanner
+			//scan.nextLine();// if not commented out you would have to hit enter again after typing y to continue
 			
 			boolean correctType = false;
 			while (correctType == false) {
