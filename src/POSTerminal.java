@@ -32,68 +32,70 @@ public class POSTerminal {
 		ArrayList<Product> productList;
 		ArrayList<Cart> cartList = new ArrayList<>();
 		Payment payment = new Payment();
-		
+
 		if (userChoice == 1) {
 			// if no, exit; if yes: Display menu
 			productList = new ArrayList<Product>();
 			productList = createProductList();
 			System.out.println("Menu: (Item, Category, Description, Price)\n");
-			
+
 			displayProductList(productList);
-// begin loop
-			while (cont.equalsIgnoreCase("n")){//while loop added for adding aditional items to transaction
+			// begin loop
+			while (cont.equalsIgnoreCase("n")) {// while loop added for adding aditional items to transaction
 				int cartListCounter = 0;
-			// prompt: choose item? [bonus options: add an item? remove an item?]
-			System.out.print("Enter item number to add to order: ");
-			int itemChoice = scan.nextInt() - 1;
-			// Display choice and price
-			System.out.print("Enter quantity: ");
-			int itemQuantity = scan.nextInt();
-			lineTotal = LineTotal(productList.get(itemChoice).getPrice(), itemQuantity);
+				// prompt: choose item? [bonus options: add an item? remove an item?]
+				System.out.print("Enter item number to add to order: ");
+				int itemChoice = scan.nextInt() - 1;
+				// Display choice and price
+				System.out.print("Enter quantity: ");
+				int itemQuantity = scan.nextInt();
+				lineTotal = LineTotal(productList.get(itemChoice).getPrice(), itemQuantity);
 
-			// add to cart
+				// add to cart
 
-			System.out.printf("%1$-4d %2$-20s $%3$-6.2f \n", itemQuantity, productList.get(itemChoice).getProductName(),
-					lineTotal);
+				System.out.printf("%1$-4d %2$-20s $%3$-6.2f \n", itemQuantity,
+						productList.get(itemChoice).getProductName(), lineTotal);
 
-			cartList = convertToCart(itemQuantity, productList.get(itemChoice), lineTotal, cartList);
-			// Steve -- I feel like cartList has to be an arrayList of Products, not Cart, or Cart should be a subclass of Product to inherit 
-			// the properties.  Not sure how we are going to display an itemized order before checkout or be able to remove items from cart...
-			
-			// put this inside the loop to allow the user to keep picking things from the menu so it keeps adding to the subtotal.
-			payment.calcSubtotal(itemQuantity, productList.get(itemChoice).getPrice());
-			
-			// these will need to be used in checkout, 
-			payment.calcTax();
-			payment.calcTotal();
-			
-			userOption = Validator.getInt(scan, "Would you like to: (1) add another item / (2) remove an item / (3) see cart / (4) or proceed to check-out", 1, 4);
-			if (userOption == 1) {
-				continue;
-			} else if (userOption == 2) {
-				cartList = removeFromCart(payment, cartList, scan);
-				printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
-			} else if (userOption == 3) {
-				printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
-			} else if (userOption == 4) {
-		
-			cont = Validator.getString(scan, "Would you like to proceed to checkout: (y/n): "); // question for continue here, but loop ends later to include payment tally
-			}
-			if (cont.equalsIgnoreCase("y")) {
-				continue;
-				
+				cartList = convertToCart(itemQuantity, productList.get(itemChoice), lineTotal, cartList);
+				// Steve -- I feel like cartList has to be an arrayList of Products, not Cart,
+				// or Cart should be a subclass of Product to inherit
+				// the properties. Not sure how we are going to display an itemized order before
+				// checkout or be able to remove items from cart...
 
-			}//end while loop for adding additional items to transaction		
-			
-			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
-			
-			cartList = removeFromCart(payment, cartList, scan);
-			
-			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+				// put this inside the loop to allow the user to keep picking things from the
+				// menu so it keeps adding to the subtotal.
+				payment.calcSubtotal(itemQuantity, productList.get(itemChoice).getPrice());
+
+				// these will need to be used in checkout,
+				payment.calcTax();
+				payment.calcTotal();
+
+				userOption = Validator.getInt(scan,
+						"Would you like to: (1) Add another item / (2) Remove an item / (3) View cart / (4) Proceed to check-out",
+						1, 4);
+				if (userOption == 1) {
+					continue;
+				} else if (userOption == 2) {
+					cartList = removeFromCart(payment, cartList, scan);
+					printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+				} else if (userOption == 3) {
+					printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+				} else if (userOption == 4) {
+					cont = Validator.getString(scan, "Would you like to proceed to checkout: (y/n): ");
+					if (cont.equalsIgnoreCase("y")) {
+						continue;
+					} // end while loop for adding additional items to transaction
+				}
+			//	printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+
+			//	cartList = removeFromCart(payment, cartList, scan);
+
+			//	printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			} // temp end to while for cont
-			//scan.nextLine();// if not commented out you would have to hit enter again after typing y to continue
-			
+				// scan.nextLine();// if not commented out you would have to hit enter again
+				// after typing y to continue
+
 			boolean correctType = false;
 			while (correctType == false) {
 				System.out.print("How is the customer paying? (Cash, CC (CreditCard), Check): ");
@@ -105,23 +107,23 @@ public class POSTerminal {
 					double tendered = scan.nextDouble();
 					double change = tendered - lineTotal;
 					System.out.print("Change = " + change);
-					Payment p = new CashPayment(); 
-					((CashPayment)p).setChange(change);
-					((CashPayment)p).setTendered(tendered);
-					
+					Payment p = new CashPayment();
+					((CashPayment) p).setChange(change);
+					((CashPayment) p).setTendered(tendered);
+
 					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-					String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
+					String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
 					createReceipt(receiptNum);
 					writeReceipt(receiptNum, cartList, payType, p, timeStamp);
-					
+
 				} else if (payType.equalsIgnoreCase("CHECK")) {
 					correctType = true;
 					System.out.print("Enter check number: ");
 					String checkNum = scan.next();
 					System.out.println("The check number entered is: " + checkNum);
 					Payment p = new CheckPayment();
-					((CheckPayment)p).setCheckNum(checkNum);
-					
+					((CheckPayment) p).setCheckNum(checkNum);
+
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
 					System.out.print("Enter credit card number: ");
@@ -131,37 +133,39 @@ public class POSTerminal {
 					String expDate = scan.next();
 					System.out.print("Enter the CVV: ");
 					String cvv = scan.next();
-					System.out.println(ccNumber +" "+ cvv +" "+ expDate);
+					System.out.println(ccNumber + " " + cvv + " " + expDate);
 					Payment p = new CreditCardPayment();
-					((CreditCardPayment)p).setCcNumber(ccNumber);
-					((CreditCardPayment)p).setCcv(cvv);
-					((CreditCardPayment)p).setExpDate(expDate);
-					
+					((CreditCardPayment) p).setCcNumber(ccNumber);
+					((CreditCardPayment) p).setCcv(cvv);
+					((CreditCardPayment) p).setExpDate(expDate);
+
 				} else {
 					System.out.println("This is not a valid input");
 				}
 			}
 
 			System.out.println("Exiting the loop worked");
-			
 
-		// prompt: view cart? complete order? add another item? remove item?
+			// prompt: view cart? complete order? add another item? remove item?
 
-		// create receipt file, put in directory
+			// create receipt file, put in directory
 
-//		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-//		System.out.println(timeStamp);
-//		String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
-//		System.out.println(receiptNum);
-//		createReceipt(receiptNum);
-//
-//		// System.out.println(cart.getLineTotal());
-//
-//		payType = "cash"; // test code
-//
-//		writeReceipt(receiptNum, cartList, payType, p, timeStamp); // FIXME: add Payment
-		
-	} // end if == 1
+			// String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new
+			// java.util.Date());
+			// System.out.println(timeStamp);
+			// String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to
+			// filename
+			// System.out.println(receiptNum);
+			// createReceipt(receiptNum);
+			//
+			// // System.out.println(cart.getLineTotal());
+			//
+			// payType = "cash"; // test code
+			//
+			// writeReceipt(receiptNum, cartList, payType, p, timeStamp); // FIXME: add
+			// Payment
+
+		} // end if == 1
 
 	} // end Main
 
@@ -207,7 +211,8 @@ public class POSTerminal {
 	// tax
 	// total
 
-	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType, Payment payment, String timeStamp) {
+	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType, Payment payment,
+			String timeStamp) {
 
 		Path writeFile = Paths.get("transactions", filePath);
 
@@ -216,20 +221,19 @@ public class POSTerminal {
 		System.out.println("Thank you for your order!");
 
 		if (payType.equalsIgnoreCase("CASH")) {
-			CashPayment newP = (CashPayment)payment; 
+			CashPayment newP = (CashPayment) payment;
 
-			//System.out.println(newP.getSubtotal(quantity, price));
+			// System.out.println(newP.getSubtotal(quantity, price));
 			System.out.println(newP.getTendered());
 			System.out.println(newP.getTax());
 			System.out.println(payment.getTax());
 			System.out.println(newP.getTotal());
 		}
-		
-		
+
 		for (int i = 0; i < cartList.size(); i++) {
 
 			System.out.println("Test:" + cartList.get(i).toString()); // test code
-			
+
 			try {
 				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
 
@@ -238,13 +242,13 @@ public class POSTerminal {
 				printOut.println();
 				printOut.println(cartList.get(i).toString()); // print to txt file
 				System.out.println("TEST: write to receipt"); // test code
-				
+
 				printOut.close(); //
 			} catch (FileNotFoundException e) {
 				// output an error comment
 				e.printStackTrace();
 			}
-			
+
 		}
 
 	}
@@ -296,11 +300,11 @@ public class POSTerminal {
 		cart.add(input);
 		return cart;
 	}
-	
+
 	public static void printCart(double subtotal, double tax, double total, ArrayList<Cart> cart) {
 		System.out.println("You currently have in your cart:");
 		System.out.println("");
-		for(int i = 0; i < cart.size(); i++) {
+		for (int i = 0; i < cart.size(); i++) {
 			System.out.println(cart.get(i).toString());
 			System.out.println("");
 		}
@@ -309,7 +313,7 @@ public class POSTerminal {
 		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Total:", total));
 
 	}
-	
+
 	public static void displayProductList(ArrayList<Product> productList) {
 		int i = 1;
 		for (Product e : productList) {
@@ -318,33 +322,34 @@ public class POSTerminal {
 			i++;
 		}
 	}
-	
+
 	public static ArrayList<Cart> removeFromCart(Payment payment, ArrayList<Cart> cart, Scanner scan) {
-		for(int i = 0; i < cart.size(); i++) {
+		for (int i = 0; i < cart.size(); i++) {
 			System.out.println((i + 1) + ") " + cart.get(i).toString());
 			System.out.println("");
 		}
-		
-		System.out.println("Select the item you would like to remove, or select " + (cart.size() + 1) + " to exit this option: ");
+
+		System.out.println(
+				"Select the item you would like to remove, or select " + (cart.size() + 1) + " to exit this option: ");
 		int userChoice = scan.nextInt();
-		
+
 		if (userChoice > cart.size()) {
 			return cart;
-		}
-		else {
-			for(int i = userChoice; i < cart.size(); i++) {
+		} else {
+			for (int i = userChoice; i < cart.size(); i++) {
 				cart.set((i - 1), cart.get(i));
 			}
 			cart.remove(cart.size() - 1);
-			
+
 			payment.setSubtotal(0);
 			for (int i = 0; i < cart.size(); i++) {
-				payment.calcSubtotal(cart.get(i).getQuantity(), (cart.get(i).getLineTotal()/cart.get(i).getQuantity()));
+				payment.calcSubtotal(cart.get(i).getQuantity(),
+						(cart.get(i).getLineTotal() / cart.get(i).getQuantity()));
 				payment.calcTax();
 				payment.calcTotal();
 			}
 			return cart;
 		}
 	}
-	
+
 }
