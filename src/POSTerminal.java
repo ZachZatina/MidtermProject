@@ -26,14 +26,14 @@ public class POSTerminal {
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
 		System.out.print(
-				"Welcome to the [name] POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions: ");
+				"Welcome to the Mr. Roboto's Seoul Taco POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions: ");
 		int userChoice = scan.nextInt();
 
 		ArrayList<Product> productList;
 		ArrayList<Cart> cartList = new ArrayList<>();
 		Payment payment = new Payment();
 
-		if (userChoice == 1) {
+		while (userChoice == 1) {
 			// if no, exit; if yes: Display menu
 			productList = new ArrayList<Product>();
 			productList = createProductList();
@@ -80,7 +80,7 @@ public class POSTerminal {
 					} else if (userOption == 4) {
 						displayProductList(productList);
 					} else if (userOption == 5) {
-						cont = Validator.getString(scan, "Would you like to proceed to checkout: (y/n): ");
+						cont = Validator.getString(scan, "You entered 'Proceed to Checkout' 'Y' to confirm, 'N' to go back: ");
 						if (cont.equalsIgnoreCase("y")) {
 							exitprompt = true;
 							continue;
@@ -93,6 +93,8 @@ public class POSTerminal {
 			} // temp end to while for cont
 				// scan.nextLine();// if not commented out you would have to hit enter again
 				// after typing y to continue
+			
+			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			boolean correctType = false;
 			while (correctType == false) {
@@ -143,13 +145,20 @@ public class POSTerminal {
 				}
 			}
 
-			System.out.println("Exiting the loop worked");
-
-			// prompt: view cart? complete order? add another item? remove item?
+			System.out.println("Would you like to complete another transaction? (y/n): ");
+			String again = scan.nextLine();
+			if(again.equalsIgnoreCase("Y")) {
+				userChoice = 1;
+			} else {
+				userChoice = 0;
+			}
 
 			// create receipt file, put in directory
 
-		} // end if == 1
+		}
+		// end if == 1
+
+		System.out.println("Thank you for using the POS Terminal!");
 
 	} // end Main
 
