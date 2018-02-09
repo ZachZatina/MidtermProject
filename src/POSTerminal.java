@@ -16,6 +16,7 @@ public class POSTerminal {
 	public static void main(String[] args) {
 		String cont = "y"; // variable for while loop
 		double lineTotal = 0;
+		String payType;
 		Scanner scan = new Scanner(System.in);
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
@@ -69,10 +70,12 @@ public class POSTerminal {
 			}//end while loop for adding additional items to transaction		
 			
 			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+			
+			cartList = removeFromCart(cartList, scan);
 
 			} // temp end to while for cont
 			scan.nextLine();// may not need this here to clear the scanner
-			String payType;
+			
 			boolean correctType = false;
 			while (correctType == false) {
 				System.out.print("How is the customer paying? (Cash, CC (CreditCard), Check): ");
@@ -137,7 +140,7 @@ public class POSTerminal {
 		//Cart cart = new Cart(2, "taco", 40.5);  	// test code, create sample cart
 		//System.out.println(cart.getLineTotal());
 		
-		String payType = "cash"; // test code
+		payType = "cash"; // test code
 		
 		// writeReceipt(receiptNum, cart, payType); -- change to cartList
 		
@@ -255,8 +258,6 @@ public class POSTerminal {
 	}
 
 	public static ArrayList<Cart> convertToCart(int quantity, Product product, double lineTotal, ArrayList<Cart> cart) {
-
-//		ArrayList<Cart> cart = new ArrayList<>();
 		String name = product.getProductName();
 		Cart input = new Cart(quantity, name, lineTotal);
 		cart.add(input);
@@ -281,8 +282,28 @@ public class POSTerminal {
 		for (Product e : productList) {
 			System.out.printf("%s. %-12s %-30s $%-10.4s\n%-150s\n", i, e.getProductCat(), e.getProductName(),
 					e.getPrice(), e.getProductDesc());
-			System.out.println("");
 			i++;
+		}
+	}
+	
+	public static ArrayList<Cart> removeFromCart(ArrayList<Cart> cart, Scanner scan) {
+		for(int i = 0; i < cart.size(); i++) {
+			System.out.println((i + 1) + ") " + cart.get(i).toString());
+			System.out.println("");
+		}
+		
+		System.out.println("Select the item you would like to remove, or select " + (cart.size() + 1) + " to exit this option: ");
+		int userChoice = scan.nextInt() - 1;
+		
+		if (userChoice == cart.size()) {
+			return cart;
+		}
+		else {
+			for(int i = userChoice; i < cart.size(); i++) {
+				cart.set(i, cart.get(i + 1));
+			}
+			cart.remove(cart.size() - 1);
+			return cart;
 		}
 	}
 	
