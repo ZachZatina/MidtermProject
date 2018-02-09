@@ -74,7 +74,6 @@ public class POSTerminal {
 			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			} // temp end to while for cont
-			scan.nextLine();// may not need this here to clear the scanner
 			String payType;
 			boolean correctType = false;
 			while (correctType == false) {
@@ -86,15 +85,33 @@ public class POSTerminal {
 					System.out.print("Enter cash value: ");
 					double tendered = scan.nextDouble();
 					double change = tendered - lineTotal;
-					System.out.print("Change = " + change);
-					Payment p = new CashPayment(); 
-					((CashPayment)p).setChange(change);
-					((CashPayment)p).setTendered(tendered);
+					System.out.printf("Change = $%.2f\n", change); // changed to printf
+					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), change, tendered);  // create as CashPayment
+
+//					System.out.println(cp.getSubtotal());
+//					System.out.println(cp.getTax());
+//					System.out.println(cp.getTotal());
+//					System.out.println(cp.getTendered());
+//					System.out.println(cp.getChange());
+					
+//					if (cp instanceof CashPayment) {
+//						System.out.println("cp is a CashPayment");
+//					} else {
+//						System.out.println("cp is a Payment");
+//					}
+					
+					Payment cpAsP = (CashPayment)cp; // cast CashPayment as Payment to pass to method
+					
+//					if (cpAsP instanceof CashPayment) {
+//						System.out.println("cpAsP is a CashPayment");
+//					} else {
+//						System.out.println("cpAsP is a Payment");
+//					}
 					
 					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 					String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
 					createReceipt(receiptNum);
-					writeReceipt(receiptNum, cartList, payType, p, timeStamp);
+					writeReceipt(receiptNum, cartList, payType, cpAsP, payment, timeStamp);
 					
 				} else if (payType.equalsIgnoreCase("CHECK")) {
 					correctType = true;
@@ -130,17 +147,6 @@ public class POSTerminal {
 		// prompt: view cart? complete order? add another item? remove item?
 
 		// create receipt file, put in directory
-//		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-//		System.out.println(timeStamp);
-//		String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
-//		System.out.println(receiptNum);
-//		createReceipt(receiptNum);
-//
-//		// System.out.println(cart.getLineTotal());
-//
-//		payType = "cash"; // test code
-//
-//		writeReceipt(receiptNum, cartList, payType, p, timeStamp); // FIXME: add Payment
 		
 	} // end if == 1
 
@@ -188,45 +194,50 @@ public class POSTerminal {
 	// tax
 	// total
 
-	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType, Payment payment, String timeStamp) {
+	public static void writeReceipt(String filePath, ArrayList<Cart> finalCart, String payType, Payment cpAsP, Payment payment, String timeStamp) {
 
 		Path writeFile = Paths.get("transactions", filePath);
 
 		File file = writeFile.toFile();
 
 		System.out.println("Thank you for your order!");
-
+		
 		if (payType.equalsIgnoreCase("CASH")) {
-			CashPayment newP = (CashPayment)payment; 
-
-			//System.out.println(newP.getSubtotal(quantity, price));
-			System.out.println(newP.getTendered());
-			System.out.println(newP.getTax());
-			System.out.println(payment.getTax());
-			System.out.println(newP.getTotal());
-		}
-		
-		
-		for (int i = 0; i < cartList.size(); i++) {
-
-			System.out.println("Test:" + cartList.get(i).toString()); // test code
 			
-			try {
-				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
+			CashPayment cpAgain = (CashPayment)cpAsP; // cast back to CashPayment, to access methods
 
-				printOut.println("Thank you for your order!");
-				printOut.println(timeStamp);
-				printOut.println();
-				printOut.println(cartList.get(i).toString()); // print to txt file
-				System.out.println("TEST: write to receipt"); // test code
-				
-				printOut.close(); //
-			} catch (FileNotFoundException e) {
-				// output an error comment
-				e.printStackTrace();
-			}
+			printCart(cpAgain.getSubtotal(),  cpAgain.getTax(),  cpAgain.getTotal(), finalCart);
 			
+			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Cash:", cpAgain.getTendered()));
+			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Change:", cpAgain.getChange()));
+
+
+			
+
 		}
+		// else if (check) {
+		
+//		for (int i = 0; i < cartList.size(); i++) {
+//
+//			System.out.println("Test: " + cartList.get(i).toString()); // test code
+//			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+//			
+//			try {
+//				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
+//
+//				printOut.println("Thank you for your order!");
+//				printOut.println(timeStamp);
+//				printOut.println();
+//				printOut.println(cartList.get(i).toString()); // print to txt file
+//				System.out.println("TEST: write to receipt"); // test code
+//				
+//				printOut.close(); //
+//			} catch (FileNotFoundException e) {
+//				// output an error comment
+//				e.printStackTrace();
+//			}
+//			
+//		}
 
 	}
 
@@ -281,7 +292,7 @@ public class POSTerminal {
 	}
 	
 	public static void printCart(double subtotal, double tax, double total, ArrayList<Cart> cart) {
-		System.out.println("You currently have in your cart:");
+		System.out.println("You currently have in your cart:");  // FIXME: move outside of method so can be called in writeReceipt
 		System.out.println("");
 		for(int i = 0; i < cart.size(); i++) {
 			System.out.println(cart.get(i).toString());
