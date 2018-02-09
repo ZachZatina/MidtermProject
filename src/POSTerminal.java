@@ -26,17 +26,25 @@ public class POSTerminal {
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
 		System.out.print(
-				"Welcome to the [name] POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions: ");
+				"Welcome to the Mr. Roboto's Seoul Taco POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions: ");
 		int userChoice = scan.nextInt();
 
 		ArrayList<Product> productList;
-		ArrayList<Cart> cartList = new ArrayList<>();
+		ArrayList<Cart> cartList;
 		Payment payment = new Payment();
 
-		if (userChoice == 1) {
+		while (userChoice == 1) {
+			cartList = new ArrayList<>();
+			cont = "n";
+			payment.setSubtotal(0.00);
+			payment.setTax(0.00);
+			payment.setTotal(0.00);
+			
 			// if no, exit; if yes: Display menu
 			productList = new ArrayList<Product>();
 			productList = createProductList();
+			System.out.println("");
+			System.out.println("");
 			System.out.println("Menu: (Item, Category, Description, Price)\n");
 
 			displayProductList(productList);
@@ -80,7 +88,7 @@ public class POSTerminal {
 					} else if (userOption == 4) {
 						displayProductList(productList);
 					} else if (userOption == 5) {
-						cont = Validator.getString(scan, "Would you like to proceed to checkout: (y/n): ");
+						cont = Validator.getString(scan, "You entered 'Proceed to Checkout' 'Y' to confirm, 'N' to go back: ");
 						if (cont.equalsIgnoreCase("y")) {
 							exitprompt = true;
 							continue;
@@ -92,8 +100,8 @@ public class POSTerminal {
 
 
 			} // temp end to while for cont
-				// scan.nextLine();// if not commented out you would have to hit enter again
-				// after typing y to continue
+			
+			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			boolean correctType = false;
 			while (correctType == false) {
@@ -104,13 +112,13 @@ public class POSTerminal {
 					correctType = true;
 					System.out.print("Enter cash value: ");
 					double tendered = scan.nextDouble();
-					double change = tendered - payment.getTotal();
-					System.out.printf("Change = $%.2f\n", change); // changed to printf
-					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(),
-							change, tendered); // create as CashPayment
+					// double change = tendered - lineTotal; // -ACC: call method instead
+					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), tendered);  // create as CashPayment
+					
+					System.out.printf("Change to customer = $%.2f\n", cp.getChange()); // display change owed customer to console
 
-					Payment cpAsP = (CashPayment) cp; // cast CashPayment as Payment to pass to method
-
+					Payment cpAsP = (CashPayment)cp; // cast CashPayment as Payment to pass to receipt method
+					
 					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 					String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
 					createReceipt(receiptNum);
@@ -121,8 +129,10 @@ public class POSTerminal {
 					System.out.print("Enter check number: ");
 					String checkNum = scan.next();
 					System.out.println("The check number entered is: " + checkNum);
-					Payment p = new CheckPayment();
-					((CheckPayment) p).setCheckNum(checkNum);
+					CheckPayment ckp = new CheckPayment();
+					
+//					Payment p = new CheckPayment();
+//					((CheckPayment) p).setCheckNum(checkNum);
 
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
@@ -143,14 +153,21 @@ public class POSTerminal {
 					System.out.println("This is not a valid input");
 				}
 			}
-
-			System.out.println("Exiting the loop worked");
-
-			// prompt: view cart? complete order? add another item? remove item?
+			scan.nextLine();
+			System.out.print("Would you like to complete another transaction? (y/n): ");
+			String again = scan.nextLine();
+			if(again.equalsIgnoreCase("Y")) {
+				userChoice = 1;
+			} else {
+				userChoice = 0;
+			}
 
 			// create receipt file, put in directory
 
-		} // end if == 1
+		}
+		// end if == 1
+
+		System.out.println("Thank you for using the POS Terminal!");
 
 	} // end Main
 
@@ -210,6 +227,7 @@ public class POSTerminal {
 			CashPayment cpAgain = (CashPayment) cpAsP; // cast back to CashPayment, to access methods
 
 			printCart(cpAgain.getSubtotal(), cpAgain.getTax(), cpAgain.getTotal(), finalCart);
+			System.out.println("");
 
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Cash:", cpAgain.getTendered()));
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Change:", cpAgain.getChange()));
@@ -217,17 +235,17 @@ public class POSTerminal {
 			try {
 				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
 
-				printOut.println("Name\nAddress\n\nThank you for your order!");
-
+				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
+				
 				printOut.println(timeStamp); // FIXME: reformat
 				printOut.println("");
+				
+				for (int i = 0; i < finalCart.size(); i++) {
+					printOut.println(finalCart.get(i).toString());
+				}
 
-				// printOut.println(printCart(cpAgain.getSubtotal(), cpAgain.getTax(),
-				// cpAgain.getTotal(), finalCart));
-
-				printOut.println(String.format("%1$-10s: $%2$-8.2f", "Cash:", cpAgain.getTendered()));
-				printOut.println(String.format("%1$-10s: $%2$-8.2f", "Change:", cpAgain.getChange()));
-
+				printOut.println(cpAgain.toString());
+				
 				System.out.println("TEST: write to receipt completed"); // test code
 
 				printOut.close();
@@ -297,7 +315,7 @@ public class POSTerminal {
 		System.out.println("");
 		for (int i = 0; i < cart.size(); i++) {
 			System.out.println(cart.get(i).toString());
-			System.out.println("");
+			// System.out.println(""); -ACC: removed extra space
 		}
 		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Subtotal:", subtotal));
 		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Tax:", tax));
