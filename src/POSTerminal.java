@@ -34,9 +34,16 @@ public class POSTerminal {
 		Payment payment = new Payment();
 
 		while (userChoice == 1) {
+			cont = "n";
+			payment.setSubtotal(0.00);
+			payment.setTax(0.00);
+			payment.setTotal(0.00);
+			
 			// if no, exit; if yes: Display menu
 			productList = new ArrayList<Product>();
 			productList = createProductList();
+			System.out.println("");
+			System.out.println("");
 			System.out.println("Menu: (Item, Category, Description, Price)\n");
 
 			displayProductList(productList);
@@ -91,8 +98,6 @@ public class POSTerminal {
 				}
 
 			} // temp end to while for cont
-				// scan.nextLine();// if not commented out you would have to hit enter again
-				// after typing y to continue
 			
 			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
@@ -144,8 +149,8 @@ public class POSTerminal {
 					System.out.println("This is not a valid input");
 				}
 			}
-
-			System.out.println("Would you like to complete another transaction? (y/n): ");
+			scan.nextLine();
+			System.out.print("Would you like to complete another transaction? (y/n): ");
 			String again = scan.nextLine();
 			if(again.equalsIgnoreCase("Y")) {
 				userChoice = 1;
@@ -218,7 +223,7 @@ public class POSTerminal {
 			CashPayment cpAgain = (CashPayment) cpAsP; // cast back to CashPayment, to access methods
 
 			printCart(cpAgain.getSubtotal(), cpAgain.getTax(), cpAgain.getTotal(), finalCart);
-
+			
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Cash:", cpAgain.getTendered()));
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Change:", cpAgain.getChange()));
 
