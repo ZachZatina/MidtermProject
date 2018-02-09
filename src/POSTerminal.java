@@ -30,10 +30,11 @@ public class POSTerminal {
 		int userChoice = scan.nextInt();
 
 		ArrayList<Product> productList;
-		ArrayList<Cart> cartList = new ArrayList<>();
+		ArrayList<Cart> cartList;
 		Payment payment = new Payment();
 
 		while (userChoice == 1) {
+			cartList = new ArrayList<>();
 			cont = "n";
 			payment.setSubtotal(0.00);
 			payment.setTax(0.00);
