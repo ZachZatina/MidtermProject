@@ -24,7 +24,7 @@ public class POSTerminal {
 		int userChoice = scan.nextInt();
 
 		ArrayList<Product> productList;
-		ArrayList<Cart> cartList;
+		ArrayList<Cart> cartList = new ArrayList<>();
 		Payment payment = new Payment();
 		
 
@@ -46,13 +46,12 @@ public class POSTerminal {
 			int itemQuantity = scan.nextInt();
 			lineTotal = LineTotal(productList.get(itemChoice).getPrice(), itemQuantity);
 
-			// display: line total (current item price * quantity) -- use method
 			// add to cart
 
 			System.out.printf("%1$-4d %2$-20s $%3$-6.2f \n", itemQuantity, productList.get(itemChoice).getProductName(),
 					lineTotal);
 
-			cartList = convertToCart(itemQuantity, productList.get(itemChoice), lineTotal);
+			cartList = convertToCart(itemQuantity, productList.get(itemChoice), lineTotal, cartList);
 			// Steve -- I feel like cartList has to be an arrayList of Products, not Cart, or Cart should be a subclass of Product to inherit 
 			// the properties.  Not sure how we are going to display an itemized order before checkout or be able to remove items from cart...
 			
@@ -69,12 +68,7 @@ public class POSTerminal {
 				continue;
 			}//end while loop for adding additional items to transaction		
 			
-			for (int i = 0; i < cartList.size(); i++) {
-			System.out.print("This is a test: " + cartList.toString()); // test to see if all items shown
-			}
-			System.out.println("Subtotal: " + payment.getSubtotal());
-			System.out.println("Tax: " + payment.getTax());
-			System.out.println("Total" + payment.getTotal());
+			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			} // temp end to while for cont
 			scan.nextLine();// may not need this here to clear the scanner
@@ -260,9 +254,9 @@ public class POSTerminal {
 		return price * quantity;
 	}
 
-	public static ArrayList<Cart> convertToCart(int quantity, Product product, double lineTotal) {
+	public static ArrayList<Cart> convertToCart(int quantity, Product product, double lineTotal, ArrayList<Cart> cart) {
 
-		ArrayList<Cart> cart = new ArrayList<>();
+//		ArrayList<Cart> cart = new ArrayList<>();
 		String name = product.getProductName();
 		Cart input = new Cart(quantity, name, lineTotal);
 		cart.add(input);
