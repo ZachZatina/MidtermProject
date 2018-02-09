@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,6 +19,9 @@ public class POSTerminal {
 		double lineTotal = 0;
 		String payType;
 		Scanner scan = new Scanner(System.in);
+		// Create a directory called "transactions" to hold receipts
+		// If directory doesn't exist, create one
+		createDirectory("transactions");
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
 		System.out.println(
@@ -28,7 +32,6 @@ public class POSTerminal {
 		ArrayList<Cart> cartList = new ArrayList<>();
 		Payment payment = new Payment();
 		
-
 		if (userChoice == 1) {
 			// if no, exit; if yes: Display menu
 			productList = new ArrayList<Product>();
@@ -91,6 +94,11 @@ public class POSTerminal {
 					((CashPayment)p).setChange(change);
 					((CashPayment)p).setTendered(tendered);
 					
+					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+					String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
+					createReceipt(receiptNum);
+					writeReceipt(receiptNum, cartList, payType, p, timeStamp);
+					
 				} else if (payType.equalsIgnoreCase("CHECK")) {
 					correctType = true;
 					System.out.print("Enter check number: ");
@@ -122,16 +130,10 @@ public class POSTerminal {
 			System.out.println("Exiting the loop worked");
 			
 
-		} // end if == 1
-
 		// prompt: view cart? complete order? add another item? remove item?
 
-		
-		
-		// Create a directory called "transactions" to hold receipts
-		// If directory doesn't exist, create one
-		createDirectory("transactions"); 
 		// create receipt file, put in directory
+<<<<<<< HEAD
 		String receiptNum = "receipt001"; // FIXME: add a counter to add number to receipt? or time stamp?
 		createReceipt(receiptNum); 
 		
@@ -143,10 +145,24 @@ public class POSTerminal {
 		payType = "cash"; // test code
 		
 		// writeReceipt(receiptNum, cart, payType); -- change to cartList
+=======
+//		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+//		System.out.println(timeStamp);
+//		String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
+//		System.out.println(receiptNum);
+//		createReceipt(receiptNum);
+//
+//		// System.out.println(cart.getLineTotal());
+//
+//		payType = "cash"; // test code
+//
+//		writeReceipt(receiptNum, cartList, payType, p, timeStamp); // FIXME: add Payment
+>>>>>>> 460079ba81a7ab5a38a7f3a9a1aa4f4b1a1c1b70
 		
+	} // end if == 1
+
 	} // end Main
-	
-	
+
 	public static void createDirectory(String dirString) { // referencing directory path
 
 		Path dirPath = Paths.get(dirString);
@@ -156,7 +172,6 @@ public class POSTerminal {
 			try {
 				Files.createDirectory(dirPath);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (Exception e) {
 				System.out.println("Not sure what happened, contact customer service.");
@@ -168,8 +183,8 @@ public class POSTerminal {
 
 	// method to create receipt as txt file
 	public static void createReceipt(String fileString) {
-		
-		Path filePath = Paths.get("transactions", fileString); // hardcoded directory
+
+		Path filePath = Paths.get("transactions", fileString); // hardcode directory
 
 		if (Files.notExists(filePath)) {
 			try {
@@ -189,31 +204,47 @@ public class POSTerminal {
 	// subtotal
 	// tax
 	// total
-	
-	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType) {
 
+	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType, Payment payment, String timeStamp) {
 
 		Path writeFile = Paths.get("transactions", filePath);
 
 		File file = writeFile.toFile();
 
-		System.out.println(payType);
-		
-		//for loop
-		//cartList.get(arg0).toString
-		
-		//System.out.println("Test:" + cart.toString()); // test code
-		
-		try {
-			PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
+		System.out.println("Thank you for your order!");
 
-			// printOut.println(cart.toString()); // print to txt file
+		if (payType.equalsIgnoreCase("CASH")) {
+			CashPayment newP = (CashPayment)payment; 
 
-			printOut.close(); //
-		} catch (FileNotFoundException e) {
-			// output an error comment
-			e.printStackTrace();
+			//System.out.println(newP.getSubtotal(quantity, price));
+			System.out.println(newP.getTendered());
+			System.out.println(newP.getTax());
+			System.out.println(payment.getTax());
+			System.out.println(newP.getTotal());
 		}
+		
+		
+		for (int i = 0; i < cartList.size(); i++) {
+
+			System.out.println("Test:" + cartList.get(i).toString()); // test code
+			
+			try {
+				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
+
+				printOut.println("Thank you for your order!");
+				printOut.println(timeStamp);
+				printOut.println();
+				printOut.println(cartList.get(i).toString()); // print to txt file
+				System.out.println("TEST: write to receipt"); // test code
+				
+				printOut.close(); //
+			} catch (FileNotFoundException e) {
+				// output an error comment
+				e.printStackTrace();
+			}
+			
+		}
+
 	}
 
 	// method to create product list as an ArrayList, reading from txt file
