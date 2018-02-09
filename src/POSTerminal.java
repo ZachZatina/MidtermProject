@@ -74,7 +74,6 @@ public class POSTerminal {
 					correctType = true;
 					System.out.print("Enter cash value: ");
 					double tendered = scan.nextDouble();
-					
 					double change = tendered - lineTotal;
 					System.out.print("Change = " + change);
 					Payment p = new CashPayment(); 
