@@ -90,7 +90,7 @@ public class POSTerminal {
 
 			//	cartList = removeFromCart(payment, cartList, scan);
 
-			//	printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
+			//1	printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			} // temp end to while for cont
 				// scan.nextLine();// if not commented out you would have to hit enter again
