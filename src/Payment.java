@@ -11,6 +11,12 @@ public abstract class Payment {
 		
 	}
 	
+	public Payment(double subtotal, double tax, double total) {
+		this.subtotal = subtotal;
+		this.tax = tax;
+		this.total = total;
+	}
+	
 	public double getSubtotal(int quantity, double price) {
 		double subTotal = 0;
 		subTotal = subtotal + (price * quantity);

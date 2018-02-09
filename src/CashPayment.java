@@ -10,6 +10,16 @@ public class CashPayment extends Payment{
 		this.total = super.toPaymentTotal();
 	}
 
+	public CashPayment() {
+		
+	}
+	
+	public CashPayment (double subtotal, double tax, double total, double change, double tendered) {
+		super(subtotal, tax, total);
+		this.change = change;
+		this.tendered = tendered;
+	}
+	
 	public double getChange() {
 		change = tendered - total;
 		return change;

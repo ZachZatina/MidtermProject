@@ -17,6 +17,9 @@ public class POSTerminal {
 	public static void main(String[] args) {
 
 		Scanner scan = new Scanner(System.in);
+		// Create a directory called "transactions" to hold receipts
+		// If directory doesn't exist, create one
+		createDirectory("transactions");
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
 		System.out.println(
@@ -25,23 +28,16 @@ public class POSTerminal {
 
 		ArrayList<Product> productList;
 		ArrayList<Cart> cartList = null;
-
+		Payment payment = new SubPayment();
+		
 		if (userChoice == 1) {
 			// if no, exit; if yes: Display menu
 			productList = new ArrayList<Product>();
 			productList = createProductList();
 			System.out.println("Menu: (Item, Category, Description, Price)\n");
-
-			// refactor this as method displayProductList
-			int i = 1;
-			for (Product e : productList) {
-				// System.out.println(e.getProductName() + ", " + e.getProductCat() + ", " +
-				// e.getProductDesc() + ", " + e.getPrice());
-				System.out.printf("%s. %s   /   %s   /   %s   /   $%s\n", i, e.getProductName(), e.getProductCat(),
-						e.getProductDesc(), e.getPrice());
-				i++;
-
-			}
+			
+			displayProductList(productList);
+			
 			// prompt: choose item? [bonus options: add an item? remove an item?]
 			System.out.println("Enter item number to add to order.");
 			int itemChoice = scan.nextInt() - 1;
@@ -57,6 +53,14 @@ public class POSTerminal {
 					lineTotal);
 
 			cartList = convertToCart(itemQuantity, productList.get(itemChoice), lineTotal);
+			
+			// put this inside the loop to allow the user to keep picking things from the menu so it keeps adding to the subtotal.
+			double subtotal = payment.getSubtotal(itemQuantity, productList.get(itemChoice).getPrice());
+			
+			// these will need to be used in checkout, 
+			double tax = payment.getTax();
+			double total = payment.getTotal();
+			
 
 			scan.nextLine();// may not need this here to clear the scanner
 			String payType;
@@ -67,41 +71,66 @@ public class POSTerminal {
 
 				if (payType.equalsIgnoreCase("CASH")) {
 					correctType = true;
+					System.out.print("Enter cash value: ");
+					double tendered = scan.nextDouble();
+					double change = tendered - lineTotal;
+					System.out.print("Change = " + change);
 					Payment p = new CashPayment(); // type the needed inputs here for the cashPayment class
+					
+					CashPayment newP = (CashPayment)p;
+					
+					System.out.println(newP.getTendered());
+					System.out.println(newP.getTax());
+					
+					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+					//System.out.println(timeStamp);
+					String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
+					System.out.println(receiptNum);
+					createReceipt(receiptNum);
+
+					writeReceipt(receiptNum, cartList, payType, p, timeStamp);
+					
 				} else if (payType.equalsIgnoreCase("CHECK")) {
 					correctType = true;
-					Payment p = new CreditCardPayment(); // put corresponding inputs in ().
+					System.out.print("Enter check number: ");
+					String checkNum = scan.next();
+					System.out.println("The check number entered is: " + checkNum);
+					CheckPayment p = new CheckPayment(); // put corresponding inputs in ().
+					
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
-					Payment p = new CheckPayment(); // type corresponding inputs.
+					System.out.print("Enter credit card number: ");
+					String ccNumber = scan.next();
+					ccNumber = ccNumber.replace(ccNumber.subSequence(0, 11), "XXXX-XXXX-XXXX-");
+					System.out.print("Enter the expiration date: ");
+					String expDate = scan.next();
+					System.out.print("Enter the CVV: ");
+					String cvv = scan.next();
+					System.out.println(ccNumber +" "+ cvv +" "+ expDate);
+					Payment p = new CreditCardPayment(); // type corresponding inputs.
 				} else {
 					System.out.println("This is not a valid input");
 				}
 			}
-
-		} // end if == 1
+			System.out.println("Exiting the loop worked");
+			
 
 		// prompt: view cart? complete order? add another item? remove item?
 
-		// Create a directory called "transactions" to hold receipts
-		// If directory doesn't exist, create one
-		createDirectory("transactions");
 		// create receipt file, put in directory
+//		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+//		System.out.println(timeStamp);
+//		String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
+//		System.out.println(receiptNum);
+//		createReceipt(receiptNum);
+//
+//		// System.out.println(cart.getLineTotal());
+//
+//		payType = "cash"; // test code
+//
+//		writeReceipt(receiptNum, cartList, payType, p, timeStamp); // FIXME: add Payment
 		
-		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-		System.out.println(timeStamp);
-		String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
-		System.out.println(receiptNum);
-		
-		createReceipt(receiptNum);
-
-		// write to receipt
-
-		// System.out.println(cart.getLineTotal());
-
-		String payType = "cash"; // test code
-
-		writeReceipt(receiptNum, cartList, payType, timeStamp); // FIXME: add Payment
+	} // end if == 1
 
 	} // end Main
 
@@ -147,16 +176,25 @@ public class POSTerminal {
 	// tax
 	// total
 
-	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType, String timeStamp) {
+	public static void writeReceipt(String filePath, ArrayList<Cart> cartList, String payType, Payment payment, String timeStamp) {
 
 		Path writeFile = Paths.get("transactions", filePath);
 
 		File file = writeFile.toFile();
 
 		System.out.println("Thank you for your order!");
-		System.out.println("Payment type: " + payType);
-		// FIXME: add time stamp, pass in from above
 
+		if (payType.equalsIgnoreCase("CASH")) {
+			CashPayment newP = (CashPayment)payment; 
+
+			//System.out.println(newP.getSubtotal(quantity, price));
+			System.out.println(newP.getTendered());
+			System.out.println(newP.getTax());
+			System.out.println(payment.getTax());
+			System.out.println(newP.getTotal());
+		}
+		
+		
 		for (int i = 0; i < cartList.size(); i++) {
 
 			System.out.println("Test:" + cartList.get(i).toString()); // test code
@@ -228,6 +266,28 @@ public class POSTerminal {
 		Cart input = new Cart(quantity, name, lineTotal);
 		cart.add(input);
 		return cart;
+	}
+	
+	public static void printCart(double subtotal, double tax, double total, ArrayList<Cart> cart) {
+		System.out.println("You currently have in your cart:");
+		System.out.println("");
+		for(int i = 0; i < cart.size(); i++) {
+			System.out.println(cart.get(i).toString());
+			System.out.println("");
+		}
+		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Subtotal:", subtotal));
+		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Tax:", tax));
+		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Total:", total));
 
 	}
+	
+	public static void displayProductList(ArrayList<Product> productList) {
+		int i = 1;
+		for (Product e : productList) {
+			System.out.printf("%s. %s   /   %s   /   %s   /   $%s\n", i, e.getProductName(), e.getProductCat(),
+					e.getProductDesc(), e.getPrice());
+			i++;
+		}
+	}
+	
 }
