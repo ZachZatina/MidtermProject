@@ -14,7 +14,8 @@ import java.util.Scanner;
 public class POSTerminal {
 
 	public static void main(String[] args) {
-
+		String cont = "y"; // variable for while loop
+		double lineTotal = 0;
 		Scanner scan = new Scanner(System.in);
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
@@ -34,14 +35,16 @@ public class POSTerminal {
 			System.out.println("Menu: (Item, Category, Description, Price)\n");
 			
 			displayProductList(productList);
-			
+// begin loop
+			while (cont.equalsIgnoreCase("y")){//while loop added for adding aditional items to transaction
+				int cartListCounter = 0;
 			// prompt: choose item? [bonus options: add an item? remove an item?]
 			System.out.println("Enter item number to add to order.");
 			int itemChoice = scan.nextInt() - 1;
 			// Display choice and price
 			System.out.print("Enter quantity: ");
 			int itemQuantity = scan.nextInt();
-			double lineTotal = LineTotal(productList.get(itemChoice).getPrice(), itemQuantity);
+			lineTotal = LineTotal(productList.get(itemChoice).getPrice(), itemQuantity);
 
 			// display: line total (current item price * quantity) -- use method
 			// add to cart
@@ -50,19 +53,30 @@ public class POSTerminal {
 					lineTotal);
 
 			cartList = convertToCart(itemQuantity, productList.get(itemChoice), lineTotal);
+			// Steve -- I feel like cartList has to be an arrayList of Products, not Cart, or Cart should be a subclass of Product to inherit 
+			// the properties.  Not sure how we are going to display an itemized order before checkout or be able to remove items from cart...
 			
 			// put this inside the loop to allow the user to keep picking things from the menu so it keeps adding to the subtotal.
 			payment.calcSubtotal(itemQuantity, productList.get(itemChoice).getPrice());
-			
+			cont = Validator.getString(scan, "Would you like to add more items to this order (y/n): "); // question for continue here, but loop ends later to include payment tally
+
+		
+
 			// these will need to be used in checkout, 
 			payment.calcTax();
 			payment.calcTotal();
+			if (cont.equalsIgnoreCase("y")) {
+				continue;
+			}//end while loop for adding additional items to transaction		
 			
+			for (int i = 0; i < cartList.size(); i++) {
+			System.out.print("This is a test: " + cartList.toString()); // test to see if all items shown
+			}
 			System.out.println("Subtotal: " + payment.getSubtotal());
 			System.out.println("Tax: " + payment.getTax());
 			System.out.println("Total" + payment.getTotal());
-			
 
+			} // temp end to while for cont
 			scan.nextLine();// may not need this here to clear the scanner
 			String payType;
 			boolean correctType = false;
@@ -107,6 +121,7 @@ public class POSTerminal {
 					System.out.println("This is not a valid input");
 				}
 			}
+
 			System.out.println("Exiting the loop worked");
 			
 
