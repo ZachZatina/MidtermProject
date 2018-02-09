@@ -24,8 +24,8 @@ public class POSTerminal {
 		createDirectory("transactions");
 
 		// prompt user: begin transaction?, [maybe: examine old transaction]
-		System.out.println(
-				"Welcome to the [name] POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions");
+		System.out.print(
+				"Welcome to the [name] POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions: ");
 		int userChoice = scan.nextInt();
 
 		ArrayList<Product> productList;
@@ -43,7 +43,7 @@ public class POSTerminal {
 			while (cont.equalsIgnoreCase("y")){//while loop added for adding aditional items to transaction
 				int cartListCounter = 0;
 			// prompt: choose item? [bonus options: add an item? remove an item?]
-			System.out.println("Enter item number to add to order.");
+			System.out.print("Enter item number to add to order: ");
 			int itemChoice = scan.nextInt() - 1;
 			// Display choice and price
 			System.out.print("Enter quantity: ");
@@ -74,7 +74,9 @@ public class POSTerminal {
 			
 			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 			
-			cartList = removeFromCart(cartList, scan);
+			cartList = removeFromCart(payment, cartList, scan);
+			
+			printCart(payment.getSubtotal(), payment.getTax(), payment.getTotal(), cartList);
 
 			} // temp end to while for cont
 			scan.nextLine();// may not need this here to clear the scanner
@@ -133,19 +135,7 @@ public class POSTerminal {
 		// prompt: view cart? complete order? add another item? remove item?
 
 		// create receipt file, put in directory
-<<<<<<< HEAD
-		String receiptNum = "receipt001"; // FIXME: add a counter to add number to receipt? or time stamp?
-		createReceipt(receiptNum); 
-		
-		// write to receipt
-	
-		//Cart cart = new Cart(2, "taco", 40.5);  	// test code, create sample cart
-		//System.out.println(cart.getLineTotal());
-		
-		payType = "cash"; // test code
-		
-		// writeReceipt(receiptNum, cart, payType); -- change to cartList
-=======
+
 //		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 //		System.out.println(timeStamp);
 //		String receiptNum = "receipt" + timeStamp +".txt"; // add timestamp to filename
@@ -157,7 +147,6 @@ public class POSTerminal {
 //		payType = "cash"; // test code
 //
 //		writeReceipt(receiptNum, cartList, payType, p, timeStamp); // FIXME: add Payment
->>>>>>> 460079ba81a7ab5a38a7f3a9a1aa4f4b1a1c1b70
 		
 	} // end if == 1
 
@@ -317,23 +306,30 @@ public class POSTerminal {
 		}
 	}
 	
-	public static ArrayList<Cart> removeFromCart(ArrayList<Cart> cart, Scanner scan) {
+	public static ArrayList<Cart> removeFromCart(Payment payment, ArrayList<Cart> cart, Scanner scan) {
 		for(int i = 0; i < cart.size(); i++) {
 			System.out.println((i + 1) + ") " + cart.get(i).toString());
 			System.out.println("");
 		}
 		
 		System.out.println("Select the item you would like to remove, or select " + (cart.size() + 1) + " to exit this option: ");
-		int userChoice = scan.nextInt() - 1;
+		int userChoice = scan.nextInt();
 		
-		if (userChoice == cart.size()) {
+		if (userChoice > cart.size()) {
 			return cart;
 		}
 		else {
 			for(int i = userChoice; i < cart.size(); i++) {
-				cart.set(i, cart.get(i + 1));
+				cart.set((i - 1), cart.get(i));
 			}
 			cart.remove(cart.size() - 1);
+			
+			payment.setSubtotal(0);
+			for (int i = 0; i < cart.size(); i++) {
+				payment.calcSubtotal(cart.get(i).getQuantity(), (cart.get(i).getLineTotal()/cart.get(i).getQuantity()));
+				payment.calcTax();
+				payment.calcTotal();
+			}
 			return cart;
 		}
 	}
