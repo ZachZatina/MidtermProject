@@ -105,11 +105,12 @@ public class POSTerminal {
 					correctType = true;
 					System.out.print("Enter cash value: ");
 					double tendered = scan.nextDouble();
-					double change = tendered - lineTotal;
-					System.out.printf("Change = $%.2f\n", change); // changed to printf
-					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), change, tendered);  // create as CashPayment
+					// double change = tendered - lineTotal; // -ACC: call method instead
+					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), tendered);  // create as CashPayment
+					
+					System.out.printf("Change to customer = $%.2f\n", cp.getChange()); // display change owed customer to console
 
-					Payment cpAsP = (CashPayment)cp; // cast CashPayment as Payment to pass to method
+					Payment cpAsP = (CashPayment)cp; // cast CashPayment as Payment to pass to receipt method
 					
 					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
 					String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
@@ -121,8 +122,10 @@ public class POSTerminal {
 					System.out.print("Enter check number: ");
 					String checkNum = scan.next();
 					System.out.println("The check number entered is: " + checkNum);
-					Payment p = new CheckPayment();
-					((CheckPayment) p).setCheckNum(checkNum);
+					CheckPayment ckp = new CheckPayment();
+					
+//					Payment p = new CheckPayment();
+//					((CheckPayment) p).setCheckNum(checkNum);
 
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
@@ -210,22 +213,23 @@ public class POSTerminal {
 			CashPayment cpAgain = (CashPayment)cpAsP; // cast back to CashPayment, to access methods
 
 			printCart(cpAgain.getSubtotal(), cpAgain.getTax(), cpAgain.getTotal(), finalCart);
-			
+			System.out.println("");
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Cash:", cpAgain.getTendered()));
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Change:", cpAgain.getChange()));
 
 			try {
 				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
 
-				printOut.println("Name\nAddress\n\nThank you for your order!");
+				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
 				
 				printOut.println(timeStamp); // FIXME: reformat
 				printOut.println("");
 				
-				//printOut.println(printCart(cpAgain.getSubtotal(), cpAgain.getTax(), cpAgain.getTotal(), finalCart));
-				
-				printOut.println(String.format("%1$-10s: $%2$-8.2f", "Cash:", cpAgain.getTendered()));
-				printOut.println(String.format("%1$-10s: $%2$-8.2f", "Change:", cpAgain.getChange()));
+				for (int i = 0; i < finalCart.size(); i++) {
+					printOut.println(finalCart.get(i).toString());
+				}
+
+				printOut.println(cpAgain.toString());
 				
 				System.out.println("TEST: write to receipt completed"); // test code
 				
@@ -297,7 +301,7 @@ public class POSTerminal {
 		System.out.println("");
 		for (int i = 0; i < cart.size(); i++) {
 			System.out.println(cart.get(i).toString());
-			System.out.println("");
+			// System.out.println(""); -ACC: removed extra space
 		}
 		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Subtotal:", subtotal));
 		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Tax:", tax));
