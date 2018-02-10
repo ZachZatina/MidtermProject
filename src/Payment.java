@@ -39,7 +39,7 @@ public class Payment {
 		this.subtotal = subTotal;
 	}
 	
-	// calculates tac
+	// calculates tax
 	public void calcTax() {
 		final double TAXRATE = 0.06;
 		double tax;

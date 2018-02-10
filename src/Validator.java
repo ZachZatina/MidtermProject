@@ -6,7 +6,6 @@ public class Validator {
 	public static String getString(Scanner sc, String prompt) {
 		System.out.print(prompt);
 		String s = sc.next(); // read user entry
-		sc.nextLine(); // discard any other data entered on the line
 		return s;
 	}
 
@@ -21,7 +20,6 @@ public class Validator {
 			} else {
 				System.out.println("Error! Invalid integer value. Try again.");
 			}
-			sc.nextLine(); // discard any other data entered on the line
 		}
 		return i;
 	}
@@ -52,7 +50,6 @@ public class Validator {
 			} else {
 				System.out.println("Error! Invalid decimal value. Try again.");
 			}
-			sc.nextLine(); // discard any other data entered on the line
 		}
 		return d;
 	}
