@@ -3,8 +3,8 @@ public class CashPayment extends Payment{
 	
 	private double change;
 	private double tendered;
-	private double total;
-
+	// ACC removed extra total
+	
 	public CashPayment() {
 		
 	}

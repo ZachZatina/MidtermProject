@@ -106,21 +106,23 @@ public class POSTerminal {
 			while (correctType == false) {
 				System.out.print("How is the customer paying? (Cash, CC (CreditCard), Check): ");
 				payType = scan.nextLine();
-
+				
+				String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+				String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
+				createReceipt(receiptNum);
+				
 				if (payType.equalsIgnoreCase("CASH")) {
 					correctType = true;
 					System.out.print("Enter cash value: ");
 					double tendered = scan.nextDouble();
-					// double change = tendered - lineTotal; // -ACC: call method instead
-					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), tendered);  // create as CashPayment
-					
-					System.out.printf("Change to customer = $%.2f\n", cp.getChange()); // display change owed customer to console
 
+					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), tendered);  // create as CashPayment
+					System.out.printf("Change due customer = $%.2f\n", cp.getChange()); // display change owed customer to console
 					Payment cpAsP = (CashPayment)cp; // cast CashPayment as Payment to pass to receipt method
 					
-					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-					String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
-					createReceipt(receiptNum);
+//					String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+//					String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
+//					createReceipt(receiptNum);
 					writeReceipt(receiptNum, cartList, payType, cpAsP, payment, timeStamp);
 
 				} else if (payType.equalsIgnoreCase("CHECK")) {
@@ -128,26 +130,27 @@ public class POSTerminal {
 					System.out.print("Enter check number: ");
 					String checkNum = scan.next();
 					System.out.println("The check number entered is: " + checkNum);
-					CheckPayment ckp = new CheckPayment();
+				
+					CheckPayment ckp = new CheckPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), checkNum);
+					Payment ckpAsP = (CheckPayment)ckp; // cast CheckPayment as Payment
 					
-//					Payment p = new CheckPayment();
-//					((CheckPayment) p).setCheckNum(checkNum);
+					writeReceipt(receiptNum, cartList, payType, ckpAsP, payment, timeStamp);
 
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
-					System.out.print("Enter credit card number: ");
-					String ccNumber = scan.next();
-					ccNumber = ccNumber.replace(ccNumber.subSequence(0, 11), "XXXX-XXXX-XXXX-");
-					System.out.print("Enter the expiration date: ");
-					String expDate = scan.next();
+					System.out.print("Enter credit card number (Do not include spaces or hypens): ");
+					String ccNumber = scan.nextLine();
+					ccNumber = ccNumber.replace(ccNumber.subSequence(0, 12), "XXXX-XXXX-XXXX-");
+					System.out.print("Enter the expiration date (mm/dd): ");
+					String expDate = scan.next(); // FIXME: validator date
 					System.out.print("Enter the CVV: ");
 					String cvv = scan.next();
-					System.out.println(ccNumber + " " + cvv + " " + expDate);
-					Payment p = new CreditCardPayment();
-					((CreditCardPayment) p).setCcNumber(ccNumber);
-					((CreditCardPayment) p).setCcv(cvv);
-					((CreditCardPayment) p).setExpDate(expDate);
+					
+					CreditCardPayment ccp = new CreditCardPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), ccNumber, expDate, cvv);
+					Payment ccpAsP = (CreditCardPayment)ccp;
 
+					writeReceipt(receiptNum, cartList, payType, ccpAsP, payment, timeStamp);
+					
 				} else {
 					System.out.println("This is not a valid input");
 				}
@@ -173,11 +176,12 @@ public class POSTerminal {
 	public static void createDirectory(String dirString) { // referencing directory path
 
 		Path dirPath = Paths.get(dirString);
-		System.out.println("New folder created: " + dirPath.toAbsolutePath());
 
 		if (Files.notExists(dirPath)) {
 			try {
 				Files.createDirectory(dirPath);
+				System.out.println("New folder created: " + dirPath.toAbsolutePath());
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -188,15 +192,14 @@ public class POSTerminal {
 
 	}
 
-	// method to create receipt as txt file
 	public static void createReceipt(String fileString) {
+		// method to create receipt as txt file
 
 		Path filePath = Paths.get("transactions", fileString); // hardcode directory
 
 		if (Files.notExists(filePath)) {
 			try {
 				Files.createFile(filePath);
-				System.out.println("Receipt was created successfully.\n");
 			} catch (IOException e) {
 				System.out.println("Something went wrong, receipt not created.");
 				e.printStackTrace();
@@ -204,38 +207,26 @@ public class POSTerminal {
 		}
 	}
 
-	// method to write to receipt file
-	// name, phone, email
-	// use toString from Cart
-	// blank space btn items
-	// subtotal
-	// tax
-	// total
-
 	public static void writeReceipt(String filePath, ArrayList<Cart> finalCart, String payType, Payment cpAsP,
 			Payment payment, String timeStamp) {
 
 		Path writeFile = Paths.get("transactions", filePath);
-
 		File file = writeFile.toFile();
-
-		System.out.println("Thank you for your order!");
+		System.out.println("\nOrder Details:");
 
 		if (payType.equalsIgnoreCase("CASH")) {
 
 			CashPayment cpAgain = (CashPayment) cpAsP; // cast back to CashPayment, to access methods
 
+			// Console receipt:
 			printCart(cpAgain.getSubtotal(), cpAgain.getTax(), cpAgain.getTotal(), finalCart);
 			System.out.println("");
-
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Cash:", cpAgain.getTendered()));
 			System.out.println(String.format("%1$-10s: $%2$-8.2f", "Change:", cpAgain.getChange()));
 
-			try {
+			try { // txt receipt:
 				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
-
 				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
-				
 				printOut.println(timeStamp); // FIXME: reformat
 				printOut.println("");
 				
@@ -244,26 +235,74 @@ public class POSTerminal {
 				}
 
 				printOut.println(cpAgain.toString());
-				
-				System.out.println("TEST: write to receipt completed"); // test code
-
 				printOut.close();
+				System.out.println("\n--- Receipt generated ---\n");
 			} catch (FileNotFoundException e) {
 				// output an error comment
 				e.printStackTrace();
 			}
 
+		} else if (payType.equalsIgnoreCase("CHECK")) {
+			
+			// Console receipt:
+			CheckPayment cpAgain = (CheckPayment) cpAsP; // cast back to CheckPayment
+			printCart(cpAgain.getSubtotal(), cpAgain.getTax(), cpAgain.getTotal(), finalCart);
+			System.out.println("");
+			System.out.println("Payment type: CHECK");
+			System.out.printf("Check Number: %s\n\n", cpAgain.getCheckNum());
+			
+			try { // txt receipt:
+				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
+				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
+				printOut.println(timeStamp); // FIXME: reformat
+				printOut.println("");
+				
+				for (int i = 0; i < finalCart.size(); i++) {
+					printOut.println(finalCart.get(i).toString());
+				}
+
+				printOut.println(cpAgain.toString());
+				printOut.close();
+				System.out.println("--- Receipt generated ---\n");
+			} catch (FileNotFoundException e) {
+				// output an error comment
+				e.printStackTrace();
+			}
+		} else {
+			
+			// Console receipt:
+			CreditCardPayment cpAgain = (CreditCardPayment) cpAsP; // cast back to CreditCardPayment
+			printCart(cpAgain.getSubtotal(), cpAgain.getTax(), cpAgain.getTotal(), finalCart);
+			System.out.println("");
+			System.out.println("Payment type: Credit Card");
+			System.out.printf("Card Number: %s\n", cpAgain.getCcNumber());
+			System.out.printf("Exp. Date: %s\n", cpAgain.getExpDate());
+			System.out.printf("CCV: %s\n", cpAgain.getCcv());
+			System.out.println("Authorization: Approved\n");			
+			
+			try { // txt receipt:
+				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
+				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
+				printOut.println(timeStamp); // FIXME: reformat
+				printOut.println("");
+				
+				for (int i = 0; i < finalCart.size(); i++) {
+					printOut.println(finalCart.get(i).toString());
+				}
+
+				printOut.println(cpAgain.toString());
+				printOut.close();
+				System.out.println("--- Receipt generated ---\n");
+			} catch (FileNotFoundException e) {
+				// output an error comment
+				e.printStackTrace();
+			}
 		}
-		// else if (check) {
-		//
-		// } else {
-		// (credit)
-		// }
 
 	}
 
-	// method to create product list as an ArrayList, reading from txt file
 	public static ArrayList<Product> createProductList() {
+		// method to create product list as an ArrayList, reading from txt file
 
 		ArrayList<Product> productArrayList = new ArrayList<Product>();
 
