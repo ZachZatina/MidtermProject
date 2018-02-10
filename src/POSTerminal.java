@@ -156,7 +156,7 @@ public class POSTerminal {
 					((CreditCardPayment) p).setCcv(cvv);
 					((CreditCardPayment) p).setExpDate(expDate);
 
-				} else { // if not a valid entry for payment option user informed and loop retartes
+				} else { // if not a valid entry for payment option user informed and loop restarts
 					System.out.println("This is not a valid input");
 				}
 			} // end while loop with payment conditional
