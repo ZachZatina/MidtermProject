@@ -6,6 +6,7 @@ public class Product {
 	String productDesc;
 	double price;
 	
+	// constructor for Product
 	public Product(String productName, String productCat, String productDesc, double price) {
 		super();
 		this.productName = productName;
@@ -14,6 +15,7 @@ public class Product {
 		this.price = price;
 			}
 	
+	// sets defaults
 	public Product() {
 		productName = "Coca-Cola";
 		productCat = "Beverage";

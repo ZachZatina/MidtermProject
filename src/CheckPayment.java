@@ -7,6 +7,7 @@ public class CheckPayment extends Payment {
 		
 	}
 	
+	// constructor for this class
 	public CheckPayment(double subtotal, double tax, double total, String checkNum) {
 		super(subtotal, tax, total);
 		this.checkNum = checkNum;

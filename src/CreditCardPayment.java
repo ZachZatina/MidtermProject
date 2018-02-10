@@ -3,21 +3,18 @@ public class CreditCardPayment extends Payment {
 	private String ccNumber;
 	private String expDate;
 	private String ccv;
-	private double total;
 	
 	public CreditCardPayment() {
 		
 	}
-	
+	// constructor for this class
 	public CreditCardPayment(double subtotal, double tax, double total, String ccNumber, String expDate, String ccv) {
 		super(subtotal, tax, total);
 		this.ccNumber = ccNumber;
 		this.expDate = expDate;
 		this.ccv = ccv;
-		
 	}
 	
-
 	public String getCcNumber() {
 		return ccNumber;
 	}

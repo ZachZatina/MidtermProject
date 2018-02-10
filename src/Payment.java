@@ -25,18 +25,21 @@ public class Payment {
 		
 	}
 	
+	// constructor for class
 	public Payment(double subtotal, double tax, double total) {
 		this.subtotal = subtotal;
 		this.tax = tax;
 		this.total = total;
 	}
 	
+	// method to calculate subtotal in class
 	public void calcSubtotal(int quantity, double price) {
 		double subTotal = 0;
 		subTotal = subtotal + (price * quantity);
 		this.subtotal = subTotal;
 	}
 	
+	// calculates tac
 	public void calcTax() {
 		final double TAXRATE = 0.06;
 		double tax;
@@ -51,7 +54,8 @@ public class Payment {
 	public double getTotal() {
 		return total;
 	}
-
+	
+	// calculates total
 	public void calcTotal() {
 		double total;
 		total = subtotal + tax;
