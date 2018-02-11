@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -11,32 +10,12 @@ import java.util.Scanner;
 
 public class Methods {
 
-	public static void createDirectory(String dirString) { // referencing directory path
-
-		Path dirPath = Paths.get(dirString);
-
-		if (Files.notExists(dirPath)) {
-			try {
-				Files.createDirectory(dirPath);
-				System.out.println("New folder created: " + dirPath.toAbsolutePath());
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				System.out.println("Not sure what happened, contact customer service.");
-			}
-
-		}
-
-	}
-
 	// method iterates through the arrayList for cart and utilizes a toString method
 	// to display each item in a cart then, print Subtotal, tax, and total.
 	public static void printCart(double subtotal, double tax, double total, ArrayList<Cart> cart) {
 		System.out.println("");
 		for (int i = 0; i < cart.size(); i++) {
 			System.out.println(cart.get(i).toString());
-			// System.out.println(""); -ACC: removed extra space
 		}
 		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Subtotal:", subtotal));
 		System.out.println(String.format("%1$-10s: $%2$-8.2f", "Tax:", tax));
@@ -56,9 +35,19 @@ public class Methods {
 		}
 	}
 	
+	// method to convert timestamp to dd/mm/yyyy hh:mm:ss
+	public static String formatDate () {
+		
+//		dateTime
+//		String dateTimeArray[] = dateTime.split(".");
+//		
+		return "";
+		
+	}
 	
+	
+	// method to create product list as an ArrayList, reading from txt file
 	public static ArrayList<Product> createProductList() {
-		// method to create product list as an ArrayList, reading from txt file
 
 		ArrayList<Product> productArrayList = new ArrayList<Product>();
 

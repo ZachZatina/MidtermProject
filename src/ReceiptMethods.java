@@ -6,14 +6,36 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class ReceiptMethods {
 
-	public static void createReceipt(String fileString) {
-		// method to create receipt as txt file
+	// method to create directory called "transacations" if one does not exist yet
+	public static void createDirectory() { // referencing directory path
 
-		Path filePath = Paths.get("transactions", fileString); // hardcode directory
+		String dirString = "transactions";
+		Path dirPath = Paths.get(dirString);
+
+		if (Files.notExists(dirPath)) {
+			try {
+				Files.createDirectory(dirPath);
+				System.out.println("New folder created: " + dirPath.toAbsolutePath());
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				System.out.println("Not sure what happened, contact customer service.");
+			}
+
+		}
+
+	}
+	
+	// method to create receipt as txt file
+	public static String createNewReceipt(String timeStamp) {
+		String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
+		Path filePath = Paths.get("transactions", receiptNum); 
 
 		if (Files.notExists(filePath)) {
 			try {
@@ -23,17 +45,22 @@ public class ReceiptMethods {
 				e.printStackTrace();
 			}
 		}
+		return receiptNum;
 	}
 	
-	
-	public static void writeReceipt(String filePath, ArrayList<Cart> finalCart, String payType, Payment cpAsP,
-			Payment payment, String timeStamp) {
+	// method to write receipt (+ create directory and receipt)
+	public static void writeReceipt(ArrayList<Cart> finalCart, String payType, Payment cpAsP,
+			Payment payment) { // removed filePath, TimeStamp
 
-		Path writeFile = Paths.get("transactions", filePath);
+		createDirectory(); // create directory if one does not exist 
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()); // generate timeStamp
+		String receiptNum = createNewReceipt(timeStamp); // create the new receipt
+		
+		Path writeFile = Paths.get("transactions", receiptNum);
 		File file = writeFile.toFile();
 		System.out.println("\nOrder Details:");
 
-		if (payType.equalsIgnoreCase("CASH")) {
+		if (payType.equalsIgnoreCase("CASH")) { // cash receipt
 
 			CashPayment cpAgain = (CashPayment) cpAsP; // cast back to CashPayment, to access methods
 
@@ -62,7 +89,7 @@ public class ReceiptMethods {
 				e.printStackTrace();
 			}
 
-		} else if (payType.equalsIgnoreCase("CHECK")) {
+		} else if (payType.equalsIgnoreCase("CHECK")) { // check receipt
 
 			// Console receipt:
 			CheckPayment cpAgain = (CheckPayment) cpAsP; // cast back to CheckPayment
@@ -88,7 +115,7 @@ public class ReceiptMethods {
 				// output an error comment
 				e.printStackTrace();
 			}
-		} else {
+		} else {  // Credit card receipt
 
 			// Console receipt:
 			CreditCardPayment cpAgain = (CreditCardPayment) cpAsP; // cast back to CreditCardPayment

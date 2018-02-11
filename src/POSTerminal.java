@@ -10,10 +10,7 @@ public class POSTerminal {
 		double lineTotal = 0;
 		String payType;
 		Scanner scan = new Scanner(System.in);
-		// Create a directory called "transactions" to hold receipts
-		// If directory doesn't exist, create one
-		Methods.createDirectory("transactions");
-
+		
 		// prompt user: begin transaction
 		System.out.print(
 				"Welcome to the Mr. Roboto's Seoul Taco POS Terminal! \n ---> Options (1) Begin transaction (2) Examine transactions: ");
@@ -39,10 +36,10 @@ public class POSTerminal {
 
 			Methods.displayProductList(productList);
 			// begin loop
-			while (cont.equalsIgnoreCase("n")) {// while loop added for adding aditional items to transaction
+			while (cont.equalsIgnoreCase("n")) {// while loop added for adding additional items to transaction
 				boolean exitprompt = false;
 				// prompt: choose item
-				int itemChoice = (Validator.getInt(scan, "Enter item number to add to order: ", 1, (productList.size()))- 1);
+				int itemChoice = (Validator.getInt(scan, "\nEnter item number to add to order: ", 1, (productList.size()))- 1);
 				int itemQuantity = Validator.getInt(scan, "Enter quantity: ", 1, 100);
 
 				// line total calculated once the user selects and item and amount to order
@@ -92,12 +89,8 @@ public class POSTerminal {
 			boolean correctType = false; // correct type established and while loop is created to go through payment
 											// options
 			while (correctType == false) { // user prompt to enter payment method
-				payType = Validator.getString(scan, "How is the customer paying? (Cash, CC (CreditCard), Check): ");
+				payType = Validator.getString(scan, "\nHow is the customer paying? (Cash, CC (CreditCard), Check): ");
 				
-				
-				String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-				String receiptNum = "receipt" + timeStamp + ".txt"; // add timestamp to filename
-				ReceiptMethods.createReceipt(receiptNum);
 
 				// payment method cash, prompts the user to enter cash tendered then subtracts
 				// total from the tendered amount
@@ -107,8 +100,7 @@ public class POSTerminal {
 					CashPayment cp = new CashPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), tendered); // create as CashPayment
 					System.out.printf("Change due customer = $%.2f\n", cp.getChange()); // display change owed customer to console
 					Payment cpAsP = (CashPayment) cp; // cast CashPayment as Payment to pass to receipt method
-					System.out.printf("Change to customer = $%.2f\n", cp.getChange()); // display change owed customer to console
-					ReceiptMethods.writeReceipt(receiptNum, cartList, payType, cpAsP, payment, timeStamp); // receipt created with payment type, time stamp, and then utilize writeReceipt
+					ReceiptMethods.writeReceipt(cartList, payType, cpAsP, payment);
 					
 					// check payment option below
 				} else if (payType.equalsIgnoreCase("CHECK")) {
@@ -117,18 +109,31 @@ public class POSTerminal {
 					System.out.println("The check number entered is: " + checkNum);
 					CheckPayment ckp = new CheckPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), checkNum);
 					Payment ckpAsP = (CheckPayment) ckp; // cast CheckPayment as Payment
-					ReceiptMethods.writeReceipt(receiptNum, cartList, payType, ckpAsP, payment, timeStamp);
+					ReceiptMethods.writeReceipt(cartList, payType, ckpAsP, payment);
 
 					// CC payment option below
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
+					
+					// --- method set for validating credit card number ---
+//					boolean isValidCC = false;
+//					while (isValidCC == false) {
+//						System.out.print("Enter a valid credit card number: ");
+//						long number = scan.nextLong();
+//						if (Validator.isValid(number)) {
+//							isValidCC = true;
+//						} else {
+//							System.out.println("Invalid.");
+//						}
+//					}
+					
 					String ccNumber = Validator.getString(scan, "Enter credit card number (Do not include spaces or hypens): ");// prompts user to enter ccNum
 					ccNumber = ccNumber.replace(ccNumber.subSequence(0, 12), "XXXX-XXXX-XXXX-"); // blocks out first 12 digits of number
 					String expDate = Validator.getString(scan, "Enter the expiration date (mm/yyyy): "); // prompt user for expDate
 					String cvv = Validator.getString(scan, "Enter the CVV: "); // prompts the user to input the cvv security code
 					CreditCardPayment ccp = new CreditCardPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), ccNumber, expDate, cvv);
 					Payment ccpAsP = (CreditCardPayment) ccp;
-					ReceiptMethods.writeReceipt(receiptNum, cartList, payType, ccpAsP, payment, timeStamp);
+					ReceiptMethods.writeReceipt(cartList, payType, ccpAsP, payment);
 
 				} else { // if not a valid entry for payment option user informed and loop restarts
 					System.out.println("This is not a valid input");
