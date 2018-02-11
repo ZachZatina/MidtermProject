@@ -8,10 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ReceiptMethods {
 
-	// method to create directory called "transacations" if one does not exist yet
+	// method to create directory called "transactions" if one does not exist yet
 	public static void createDirectory() { // referencing directory path
 
 		String dirString = "transactions";
@@ -27,9 +29,7 @@ public class ReceiptMethods {
 			} catch (Exception e) {
 				System.out.println("Not sure what happened, contact customer service.");
 			}
-
 		}
-
 	}
 	
 	// method to create receipt as txt file
@@ -50,7 +50,7 @@ public class ReceiptMethods {
 	
 	// method to write receipt (+ create directory and receipt)
 	public static void writeReceipt(ArrayList<Cart> finalCart, String payType, Payment cpAsP,
-			Payment payment) { // removed filePath, TimeStamp
+			Payment payment) {
 
 		createDirectory(); // create directory if one does not exist 
 		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()); // generate timeStamp
@@ -59,6 +59,9 @@ public class ReceiptMethods {
 		Path writeFile = Paths.get("transactions", receiptNum);
 		File file = writeFile.toFile();
 		System.out.println("\nOrder Details:");
+		
+		String dateAndTime = formatDate(timeStamp); // call method to reform dateStamp
+		System.out.println(dateAndTime);
 
 		if (payType.equalsIgnoreCase("CASH")) { // cash receipt
 
@@ -72,9 +75,9 @@ public class ReceiptMethods {
 
 			try { // txt receipt:
 				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
-				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
+				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!\n");
 
-				printOut.println(timeStamp); // FIXME: reformat
+				printOut.println(dateAndTime);
 				printOut.println("");
 
 				for (int i = 0; i < finalCart.size(); i++) {
@@ -101,7 +104,7 @@ public class ReceiptMethods {
 			try { // txt receipt:
 				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
 				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
-				printOut.println(timeStamp); // FIXME: reformat
+				printOut.println(dateAndTime); 
 				printOut.println("");
 
 				for (int i = 0; i < finalCart.size(); i++) {
@@ -130,7 +133,7 @@ public class ReceiptMethods {
 			try { // txt receipt:
 				PrintWriter printOut = new PrintWriter(new FileOutputStream(file, true));
 				printOut.println("Mr. Roboto's Seoul Taco\n\nThank you for your order!");
-				printOut.println(timeStamp); // FIXME: reformat
+				printOut.println(dateAndTime); 
 				printOut.println("");
 
 				for (int i = 0; i < finalCart.size(); i++) {
@@ -145,8 +148,21 @@ public class ReceiptMethods {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
-	
+	// method to convert timeStamp to dd/mm/yyyy hh:mm:ss
+	public static String formatDate (String timeStamp) {
+		
+		String[] dateTimeArray = timeStamp.split("\\.");
+		
+		String year = dateTimeArray[0];
+		String month = dateTimeArray[1];
+		String day = dateTimeArray[2];
+		String hour = dateTimeArray[3];
+		String min = dateTimeArray[4];
+		String sec = dateTimeArray[5];
+		String dateAndTime = month + "/" + day + "/" + year + "   " + hour + ":" + min + ":" + sec;
+		return dateAndTime;
+		
+	}
 }

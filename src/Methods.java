@@ -35,17 +35,6 @@ public class Methods {
 		}
 	}
 	
-	// method to convert timestamp to dd/mm/yyyy hh:mm:ss
-	public static String formatDate () {
-		
-//		dateTime
-//		String dateTimeArray[] = dateTime.split(".");
-//		
-		return "";
-		
-	}
-	
-	
 	// method to create product list as an ArrayList, reading from txt file
 	public static ArrayList<Product> createProductList() {
 
