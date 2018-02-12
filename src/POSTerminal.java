@@ -124,30 +124,29 @@ public class POSTerminal {
 				} else if (payType.equalsIgnoreCase("CC")) {
 					correctType = true;
 
-					// --- method set for validating credit card number ---
-					// boolean isValidCC = false;
-					// while (isValidCC == false) {
-					// System.out.print("Enter a valid credit card number: ");
-					// long number = scan.nextLong();
-					// if (Validator.isValid(number)) {
-					// isValidCC = true;
-					// } else {
-					// System.out.println("Invalid.");
-					// }
-					// }
+					// --- OPTION 1: method for validating credit card number:
+					long ccLong = 0;
+					boolean isValidCC = false;
+					while (isValidCC == false) {
+						System.out.print("Enter a valid credit card number (Do not include spaces or hyphens):\n (e.g. 5466380004069060) ");
+						ccLong = scan.nextLong();
+						if (Validator.isValid(ccLong)) {
+							isValidCC = true;
+						} else {
+							System.out.println("Invalid.");
+						}
+					}
+					
+					String ccString = Long.toString(ccLong); // convert long to string and block
+					String ccNumber = Validator.getEncryptCC(ccString); // method to encrypt cc number
+					
+					// --- OPTION 2: method for pseudo-validation of credit card number:
+					//	String ccNumber = Validator.getCC(scan, "Enter credit card number (Do not include spaces or hyphens): ");
+					
+					String expDate = Validator.getExpDate(scan, "Enter the expiration date (mm/yy): "); // prompt user for expDate
+					String cvv = Validator.getCVV(scan, "Enter the CVV: "); // prompts the user to input the cvv security code
+					CreditCardPayment ccp = new CreditCardPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), ccNumber, expDate, cvv);
 
-					String ccNumber = Validator.getString(scan,
-							"Enter credit card number (Do not include spaces or hypens): ");// prompts user to enter
-																							// ccNum
-					ccNumber = ccNumber.replace(ccNumber.subSequence(0, 12), "XXXX-XXXX-XXXX-"); // blocks out first 12
-																									// digits of number
-					String expDate = Validator.getString(scan, "Enter the expiration date (mm/yyyy): "); // prompt user
-																											// for
-																											// expDate
-					String cvv = Validator.getString(scan, "Enter the CVV: "); // prompts the user to input the cvv
-																				// security code
-					CreditCardPayment ccp = new CreditCardPayment(payment.getSubtotal(), payment.getTax(),
-							payment.getTotal(), ccNumber, expDate, cvv);
 					Payment ccpAsP = (CreditCardPayment) ccp;
 					ReceiptMethods.writeReceipt(cartList, payType, ccpAsP, payment);
 
