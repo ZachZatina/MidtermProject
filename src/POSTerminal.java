@@ -133,7 +133,7 @@ public class POSTerminal {
 					// --- OPTION 2: method for pseudo-validation of credit card number:
 					//	String ccNumber = Validator.getCC(scan, "Enter credit card number (Do not include spaces or hyphens): ");
 					
-					String expDate = Validator.getExpDate(scan, "Enter the expiration date (mm/yyyy): "); // prompt user for expDate
+					String expDate = Validator.getExpDate(scan, "Enter the expiration date (mm/yy): "); // prompt user for expDate
 					String cvv = Validator.getCVV(scan, "Enter the CVV: "); // prompts the user to input the cvv security code
 					CreditCardPayment ccp = new CreditCardPayment(payment.getSubtotal(), payment.getTax(), payment.getTotal(), ccNumber, expDate, cvv);
 					Payment ccpAsP = (CreditCardPayment) ccp;

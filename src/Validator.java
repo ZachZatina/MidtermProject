@@ -63,7 +63,7 @@ public class Validator {
 				int year = Integer.parseInt(expDateArray[1]); 
 				
 				if (!(month < 1) && !(month > 12)) {
-					if (!(year < 1950) && !(year > 2018)) {
+					if (!(year < 18) && !(year > 38)) {
 						isValid = true;
 					} else {
 					System.out.println("Error! Invalid year.");
@@ -84,22 +84,30 @@ public class Validator {
 	// method to validate CVV
 	public static String getCVV(Scanner sc, String prompt) {
 		int i = 0;
+		String numStr = null;
+		int numInt = 0;
 		boolean isValid = false;
 		while (isValid == false) {
 			System.out.print(prompt);
 			if (sc.hasNextInt()) {
-				i = sc.nextInt();
-				if (!(i < 99) && !(i > 999)) {
-					isValid = true;
+				numStr = sc.next();
+				
+				if (numStr.length() < 3) {
+					System.out.println("Please enter a 3 or 4-digit number: ");
 				} else {
-					System.out.println("Error! Invalid entry.");
+					numInt = Integer.parseInt(numStr); // convert to int
+					if (!(i < 0) && !(i > 9999)) { // validate 
+						isValid = true;
+					} else {
+						System.out.println("Error! Invalid entry.");
+					}
 				}
 			} else {
 				System.out.println("Error! Invalid entry.");
 				sc.next(); // discard any other data entered on the line
 			}
 		}
-		String cvv = Integer.toString(i); // int to String
+		String cvv = Integer.toString(numInt); // int to String
 		return cvv;
 	}
 	
