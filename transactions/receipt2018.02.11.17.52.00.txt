@@ -1,0 +1,22 @@
+Mr. Roboto's Seoul Taco
+
+Thank you for your order!
+02/11/2018   17:52:00
+
+2    BeepBimBap Burrito   $17.00  
+
+1    Kinematic Kimchi Quesadilla $7.50   
+
+4    Tech Taco            $16.00  
+
+2    DexteriTea           $5.00   
+
+Subtotal: : $45.50   
+Tax:      : $2.73    
+Total:    : $48.23   
+
+Credit Card
+Card Number: XXXX-XXXX-XXXX-9060
+Exp. Date: 10/2018
+CVV: 234
+Authorization: Approved

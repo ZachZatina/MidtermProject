@@ -1,0 +1,28 @@
+Mr. Roboto's Seoul Taco
+
+Thank you for your order!
+02/11/2018   20:00:09
+
+1    Plum Proxy Spritzer  $8.00   
+
+1    Soda                 $2.00   
+
+4    Tech Taco            $16.00  
+
+1    Robo Rice Bowl       $8.50   
+
+1    Bolts and Screws     $2.50   
+
+1    Bolts and Gears      $3.50   
+
+1    Soda                 $2.00   
+
+Subtotal: : $42.50   
+Tax:      : $2.55    
+Total:    : $45.05   
+
+Credit Card
+Card Number: XXXX-XXXX-XXXX-9060
+Exp. Date: 10/19
+CVV: 234
+Authorization: Approved

@@ -1,0 +1,16 @@
+Mr. Roboto's Seoul Taco
+
+Thank you for your order!
+02/11/2018   18:05:21
+
+2    Kinematic Kimchi Quesadilla $15.00  
+
+Subtotal: : $15.00   
+Tax:      : $0.90    
+Total:    : $15.90   
+
+Credit Card
+Card Number: XXXX-XXXX-XXXX-4654
+Exp. Date: 09/2018
+CVV: 233
+Authorization: Approved

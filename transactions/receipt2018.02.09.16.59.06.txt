@@ -1,0 +1,14 @@
+Mr. Roboto's Seoul Taco
+
+Thank you for your order!
+2018.02.09.16.59.06
+
+4    BeepBimBap Burrito   $34.00  
+
+Subtotal: : $34.00   
+Tax:      : $2.04    
+Total:    : $36.04   
+
+Cash:     : $40.00   
+Change:   : $3.96    
+

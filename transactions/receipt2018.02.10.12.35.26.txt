@@ -1,0 +1,16 @@
+Mr. Roboto's Seoul Taco
+
+Thank you for your order!
+2018.02.10.12.35.26
+
+1    Tech Taco            $2.75   
+
+Subtotal: : $2.75    
+Tax:      : $0.16    
+Total:    : $2.92    
+
+Credit Card
+Card Number: XXXX-XXXX-XXXX-5678
+Exp. Date: 02/2019
+CVV: 123
+Authorization: Approved

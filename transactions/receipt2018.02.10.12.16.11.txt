@@ -1,0 +1,14 @@
+Mr. Roboto's Seoul Taco
+
+Thank you for your order!
+2018.02.10.12.16.11
+
+1    Tech Taco            $2.75   
+
+Subtotal: : $2.75    
+Tax:      : $0.16    
+Total:    : $2.92    
+
+Cash:     : $5.00    
+Change:   : $2.09    
+

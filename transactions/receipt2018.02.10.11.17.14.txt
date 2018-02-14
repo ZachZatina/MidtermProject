@@ -1,0 +1,22 @@
+Mr. Roboto's Seoul Taco
+
+Thank you for your order!
+2018.02.10.11.17.14
+
+2    Robo Rice Bowl       $17.00  
+
+4    Tech Taco            $11.00  
+
+2    Soda                 $4.00   
+
+1    Kinematic Kimchi Quesadilla $7.50   
+
+2    Moto Margarita       $14.00  
+
+Subtotal: : $53.50   
+Tax:      : $3.21    
+Total:    : $56.71   
+
+Cash:     : $58.00   
+Change:   : $1.29    
+
